@@ -8,13 +8,13 @@ namespace Cengaver.Dto
 {
     public class UserRoleDto
     {
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int RoleId { get; set; }
     }
 
     public class UserRoleCreateDto
     {
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int RoleId { get; set; }
     }
 

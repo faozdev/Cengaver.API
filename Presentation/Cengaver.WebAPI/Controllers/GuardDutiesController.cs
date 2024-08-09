@@ -23,10 +23,6 @@ namespace Cengaver.WebAPI.Controllers
             _mapper = mapper;
         }
 
-        /// <summary>
-        /// Gets the list of all guard duties.
-        /// </summary>
-        /// <returns>List of guard duties.</returns>
         [SwaggerResponse(200, type: typeof(SuccessResponse<List<GuardDutyDto>>), description: SwaggerConstants.SuccessMessage)]
         [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
         [SwaggerResponse(422, type: typeof(ValidationErrorResponse), description: SwaggerConstants.NotSuccessValidationError)]
@@ -38,11 +34,6 @@ namespace Cengaver.WebAPI.Controllers
             return Ok(new SuccessResponse<List<GuardDutyDto>> { Data = guardDuties });
         }
 
-        /// <summary>
-        /// Gets a specific guard duty by ID.
-        /// </summary>
-        /// <param name="id">The ID of the guard duty.</param>
-        /// <returns>Details of the specified guard duty.</returns>
         [SwaggerResponse(200, type: typeof(SuccessResponse<GuardDutyDto>), description: SwaggerConstants.SuccessMessage)]
         [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
         [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
@@ -57,11 +48,6 @@ namespace Cengaver.WebAPI.Controllers
             return Ok(new SuccessResponse<GuardDutyDto> { Data = guardDuty });
         }
 
-        /// <summary>
-        /// Adds a new guard duty.
-        /// </summary>
-        /// <param name="guardDutyCreateDto">The details of the guard duty to add.</param>
-        /// <returns>Result of the add operation.</returns>
         [SwaggerResponse(201, type: typeof(SuccessResponse<GuardDutyDto>), description: SwaggerConstants.SuccessMessage)]
         [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
         [SwaggerResponse(422, type: typeof(ValidationErrorResponse), description: SwaggerConstants.NotSuccessValidationError)]
@@ -76,12 +62,6 @@ namespace Cengaver.WebAPI.Controllers
             return CreatedAtAction(nameof(GetGuardDutyById), new { id = guardDutyDto.Id }, new SuccessResponse<GuardDutyDto> { Data = guardDutyDto });
         }
 
-        /// <summary>
-        /// Updates an existing guard duty.
-        /// </summary>
-        /// <param name="id">The ID of the guard duty to update.</param>
-        /// <param name="guardDutyDto">The updated guard duty details.</param>
-        /// <returns>Result of the update operation.</returns>
         [SwaggerResponse(200, type: typeof(SuccessResponse<GuardDutyDto>), description: SwaggerConstants.SuccessMessage)]
         [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
         [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
@@ -100,11 +80,6 @@ namespace Cengaver.WebAPI.Controllers
             return Ok(new SuccessResponse<GuardDutyDto> { Data = updatedGuardDutyDto });
         }
 
-        /// <summary>
-        /// Deletes a specific guard duty by ID.
-        /// </summary>
-        /// <param name="id">The ID of the guard duty to delete.</param>
-        /// <returns>Result of the delete operation.</returns>
         [SwaggerResponse(204, description: SwaggerConstants.SuccessMessage)]
         [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
         [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
@@ -119,7 +94,8 @@ namespace Cengaver.WebAPI.Controllers
             return NoContent();
         }
     }
-    
+
+
 
 
 

@@ -8,14 +8,14 @@ namespace Cengaver.Dto
 {
     public class UserCommunicationDto
     {
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int CommunicationTypeId { get; set; }
         public string CommunicationString { get; set; }
     }
 
     public class UserCommunicationCreateDto
     {
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int CommunicationTypeId { get; set; }
         public string CommunicationString { get; set; }
     }

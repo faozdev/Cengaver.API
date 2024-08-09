@@ -2,12 +2,14 @@
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Cengaver.Domain;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 
 
 namespace Cengaver.Persistence
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<User> 
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -16,14 +18,13 @@ namespace Cengaver.Persistence
 
         public DbSet<CommunicationType> CommunicationTypes { get; set; }
         public DbSet<GuardDuty> GuardDuties { get; set; }
-        public DbSet<GuardDutyBreak> GuardDutieBreaks { get; set; }
+        public DbSet<GuardDutyBreak> GuardDutyBreaks { get; set; }
         public DbSet<GuardDutyBreakType> GuardDutyBreakTypes { get; set; }
         public DbSet<GuardDutyNote> GuardDutyNotes { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<TeamTransactionLog> TeamTransactionLogs { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<UserCommunication> UserCommunications { get; set; }
         public DbSet<UserIsInTeamRelation> UserIsInTeamRelations { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
@@ -36,17 +37,21 @@ namespace Cengaver.Persistence
                 optionsBuilder.UseSqlServer("YourConnectionString", b => b.MigrationsAssembly("CengaverAPI"));
             }
         }
-       
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder); 
+
             // Configure User entity
             modelBuilder.Entity<User>()
-                .HasKey(u => u.Id);
+                .Property(u => u.Id)
+                .ValueGeneratedOnAdd(); 
 
             modelBuilder.Entity<User>()
-                .Property(u => u.Id)
-                .ValueGeneratedOnAdd();
+                .HasIndex(u => u.Id)
+                .IsUnique();
 
+            // Configure User relationships
             modelBuilder.Entity<User>()
                 .HasMany(u => u.UserRoles)
                 .WithOne(ur => ur.User)
@@ -77,7 +82,6 @@ namespace Cengaver.Persistence
                 .WithOne(uc => uc.User)
                 .HasForeignKey(uc => uc.UserId);
 
-            // Configure GuardDuty entity
             modelBuilder.Entity<GuardDuty>()
                 .HasKey(gd => gd.Id);
 
@@ -133,6 +137,7 @@ namespace Cengaver.Persistence
                 .HasForeignKey(gdb => gdb.TypeId);
 
             // Configure UserRole entity
+
             modelBuilder.Entity<UserRole>()
                 .HasKey(ur => new { ur.UserId, ur.RoleId });
 
@@ -145,6 +150,7 @@ namespace Cengaver.Persistence
                 .HasOne(ur => ur.Role)
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId);
+
 
             // Configure Role entity
             modelBuilder.Entity<Role>()
@@ -185,7 +191,8 @@ namespace Cengaver.Persistence
             modelBuilder.Entity<UserCommunication>()
                 .HasOne(uc => uc.User)
                 .WithMany(u => u.UserCommunications)
-                .HasForeignKey(uc => uc.UserId);
+                .HasForeignKey(uc => uc.UserId)
+                .HasPrincipalKey(u => u.Id);
 
             modelBuilder.Entity<UserCommunication>()
                 .HasOne(uc => uc.CommunicationType)
@@ -203,17 +210,17 @@ namespace Cengaver.Persistence
 
             // Configure UserIsInTeamRelation entity
             modelBuilder.Entity<UserIsInTeamRelation>()
-                .HasKey(uitr => new { uitr.UserId, uitr.TeamId });
+                .HasKey(ut => new { ut.UserId, ut.TeamId });
 
             modelBuilder.Entity<UserIsInTeamRelation>()
-                .HasOne(uitr => uitr.User)
+                .HasOne(ut => ut.User)
                 .WithMany(u => u.UserIsInTeamRelations)
-                .HasForeignKey(uitr => uitr.UserId);
+                .HasForeignKey(ut => ut.UserId);
 
             modelBuilder.Entity<UserIsInTeamRelation>()
-                .HasOne(uitr => uitr.Team)
+                .HasOne(ut => ut.Team)
                 .WithMany(t => t.UserIsInTeamRelations)
-                .HasForeignKey(uitr => uitr.TeamId);
+                .HasForeignKey(ut => ut.TeamId);
 
             // Configure Team entity
             modelBuilder.Entity<Team>()
@@ -237,11 +244,7 @@ namespace Cengaver.Persistence
                 .HasOne(ttl => ttl.Team)
                 .WithMany(t => t.TeamTransactionLogs)
                 .HasForeignKey(ttl => ttl.TeamId);
-
-
-
         }
-
     }
 
 }

@@ -7,68 +7,101 @@ using Cengaver.Persistence;
 using Cengaver.BL.Abstractions;
 using Cengaver.Dto;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 
 namespace Cengaver.BL
 {
     public class UserService : IUserService
     {
-        private readonly DataContext _context;
-        private readonly IMapper _mapper;
+        private readonly UserManager<User> _userManager;
 
-        public UserService(DataContext context, IMapper mapper)
+        public UserService(UserManager<User> userManager)
         {
-            _context = context;
-            _mapper = mapper;
+            _userManager = userManager;
         }
 
-        public async Task<List<UserDto>> GetUsersAsync()
+        public async Task<IEnumerable<UserDto>> GetUsersAsync()
         {
-            var users = await _context.Users.ToListAsync();
-            return _mapper.Map<List<UserDto>>(users);
-        }
-
-        public async Task<UserDto> GetUserByIdAsync(int id)
-        {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            var users = await _userManager.Users.ToListAsync();
+            return users.Select(user => new UserDto
             {
-                return null; 
-            }
-            return _mapper.Map<UserDto>(user); 
+                Id = user.Id,
+                UserName = user.UserName,
+                SicilNo = user.SicilNo,
+                UserRegistrationDate = user.UserRegistrationDate
+            });
+        }
+
+        public async Task<UserDto> GetUserByIdAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) return null;
+
+            return new UserDto
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                SicilNo = user.SicilNo,
+                UserRegistrationDate = user.UserRegistrationDate
+            };
         }
 
         public async Task<UserDto> AddUserAsync(UserDto userDto)
         {
-            var user = _mapper.Map<User>(userDto);
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<UserDto>(user);
-        }
-
-        public async Task<UserDto> UpdateUserAsync(int id, UserDto userDto)
-        {
-            var existingUser = await _context.Users.FindAsync(id);
-            if (existingUser == null)
+            var user = new User
             {
-                return null; 
+                UserName = userDto.UserName,
+                SicilNo = userDto.SicilNo,
+                UserRegistrationDate = userDto.UserRegistrationDate
+            };
+
+            var result = await _userManager.CreateAsync(user, "DefaultPassword123!"); // Handle passwords securely in production
+            if (result.Succeeded)
+            {
+                // Return the created user DTO with updated Id
+                return new UserDto
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    SicilNo = user.SicilNo,
+                    UserRegistrationDate = user.UserRegistrationDate
+                };
             }
 
-            _mapper.Map(userDto, existingUser); 
-            await _context.SaveChangesAsync();
-            return _mapper.Map<UserDto>(existingUser); 
+            throw new Exception("User creation failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
         }
 
-        public async Task<bool> DeleteUserAsync(int id)
+        public async Task<UserDto> UpdateUserAsync(string id, UserDto userDto)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) return null;
+
+            user.UserName = userDto.UserName;
+            user.SicilNo = userDto.SicilNo;
+            user.UserRegistrationDate = userDto.UserRegistrationDate;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
             {
-                return false;
+                return new UserDto
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    SicilNo = user.SicilNo,
+                    UserRegistrationDate = user.UserRegistrationDate
+                };
             }
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-            return true; 
+            throw new Exception("User update failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+        }
+
+        public async Task<bool> DeleteUserAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) return false;
+
+            var result = await _userManager.DeleteAsync(user);
+            return result.Succeeded;
         }
     }
 }

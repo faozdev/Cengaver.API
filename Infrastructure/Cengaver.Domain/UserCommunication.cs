@@ -2,7 +2,7 @@
 {
     public class UserCommunication
     {
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int CommunicationTypeId { get; set; }
         public string CommunicationString { get; set; }
 

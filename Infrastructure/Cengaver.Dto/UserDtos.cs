@@ -8,7 +8,7 @@ namespace Cengaver.Dto
 {
     public class UserDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; } // Changed to string to match IdentityUser's Id type
         public string UserName { get; set; }
         public string SicilNo { get; set; }
         public DateTime UserRegistrationDate { get; set; }
@@ -16,6 +16,7 @@ namespace Cengaver.Dto
 
     public class UserCreateDto
     {
+        public string Id { get; set; }
         public string UserName { get; set; }
         public string SicilNo { get; set; }
         public DateTime UserRegistrationDate { get; set; }
@@ -23,6 +24,7 @@ namespace Cengaver.Dto
 
     public class UserUpdateDto
     {
+        public string Id { get; set; }
         public string UserName { get; set; }
         public string SicilNo { get; set; }
         public DateTime UserRegistrationDate { get; set; }

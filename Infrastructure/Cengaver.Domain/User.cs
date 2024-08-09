@@ -1,9 +1,10 @@
-﻿namespace Cengaver.Domain
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Cengaver.Domain
 {
-    public class User
+    public class User : IdentityUser
     {
-        public int Id { get; set; }
-        public string UserName { get; set; }
+        
         public string SicilNo { get; set; }
         public DateTime UserRegistrationDate { get; set; }
 

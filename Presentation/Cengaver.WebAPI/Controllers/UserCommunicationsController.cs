@@ -56,7 +56,7 @@ namespace Cengaver.WebAPI.Controllers
 
         // PUT: api/UserCommunications/5/1
         [HttpPut("update-user-communication/{userId}/{communicationTypeId}")]
-        public async Task<IActionResult> UpdateUserCommunication(int userId, int communicationTypeId, [FromBody] UserCommunicationDto userCommunicationDto)
+        public async Task<IActionResult> UpdateUserCommunication(String userId, int communicationTypeId, [FromBody] UserCommunicationDto userCommunicationDto)
         {
             if (userId != userCommunicationDto.UserId || communicationTypeId != userCommunicationDto.CommunicationTypeId)
                 return BadRequest();
