@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Base\" />
+    <Folder Include="ConnectedServices\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\.nuget\nugetPackages\nugetPackages.csproj" />
+    <ProjectReference Include="..\Cengaver.Domain\Cengaver.Domain.csproj" />
+    <ProjectReference Include="..\Cengaver.Dto\Cengaver.Dto.csproj" />
+    <ProjectReference Include="..\Cengaver.Infrastructure\Cengaver.Infrastructure.csproj" />
+    <ProjectReference Include="..\Cengaver.Persistence\Cengaver.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

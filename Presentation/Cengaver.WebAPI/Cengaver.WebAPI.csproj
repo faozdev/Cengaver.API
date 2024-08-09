@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NUnit" Version="4.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
+    <PackageReference Include="xunit" Version="2.9.0" />
+  </ItemGroup>
+
+    <ItemGroup>
+	    <ProjectReference Include="..\..\.nuget\nugetPackages\nugetPackages.csproj" />
+	    <ProjectReference Include="..\..\Application\Cengaver.BL.Abstractions\Cengaver.BL.Abstractions.csproj" />
+	    <ProjectReference Include="..\..\Application\Cengaver.BL\Cengaver.BL.csproj" />
+	    <ProjectReference Include="..\..\Infrastructure\Cengaver.Dto\Cengaver.Dto.csproj" />
+	    <ProjectReference Include="..\..\Infrastructure\Cengaver.Infrastructure\Cengaver.Infrastructure.csproj" />
+	    <ProjectReference Include="..\..\Infrastructure\Cengaver.Persistence\Cengaver.Persistence.csproj" />
+	    <ProjectReference Include="..\..\Infrastructure\Cengaver.Services\Cengaver.Services.csproj" />
+    </ItemGroup>
+
+</Project>

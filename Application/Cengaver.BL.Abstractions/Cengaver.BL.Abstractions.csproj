@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\Cengaver.Domain\Cengaver.Domain.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Cengaver.Dto\Cengaver.Dto.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Cengaver.Infrastructure\Cengaver.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
