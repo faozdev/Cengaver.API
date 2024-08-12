@@ -8,16 +8,19 @@ using Cengaver.BL.Abstractions;
 using Cengaver.Dto;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace Cengaver.BL
 {
     public class UserService : IUserService
     {
         private readonly UserManager<User> _userManager;
-
-        public UserService(UserManager<User> userManager)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public UserService(UserManager<User> userManager, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IEnumerable<UserDto>> GetUsersAsync()
@@ -27,6 +30,7 @@ namespace Cengaver.BL
             {
                 Id = user.Id,
                 UserName = user.UserName,
+                Name = user.Name,
                 SicilNo = user.SicilNo,
                 UserRegistrationDate = user.UserRegistrationDate
             });
@@ -41,6 +45,7 @@ namespace Cengaver.BL
             {
                 Id = user.Id,
                 UserName = user.UserName,
+                Name = user.Name,
                 SicilNo = user.SicilNo,
                 UserRegistrationDate = user.UserRegistrationDate
             };
@@ -52,13 +57,13 @@ namespace Cengaver.BL
             {
                 UserName = userDto.UserName,
                 SicilNo = userDto.SicilNo,
+                Name = userDto.Name,
                 UserRegistrationDate = userDto.UserRegistrationDate
             };
 
-            var result = await _userManager.CreateAsync(user, "DefaultPassword123!"); // Handle passwords securely in production
+            var result = await _userManager.CreateAsync(user, GenerateSecurePassword());
             if (result.Succeeded)
             {
-                // Return the created user DTO with updated Id
                 return new UserDto
                 {
                     Id = user.Id,
@@ -78,6 +83,7 @@ namespace Cengaver.BL
 
             user.UserName = userDto.UserName;
             user.SicilNo = userDto.SicilNo;
+            user.Name = userDto.Name;
             user.UserRegistrationDate = userDto.UserRegistrationDate;
 
             var result = await _userManager.UpdateAsync(user);
@@ -87,6 +93,7 @@ namespace Cengaver.BL
                 {
                     Id = user.Id,
                     UserName = user.UserName,
+                    Name = user.Name,
                     SicilNo = user.SicilNo,
                     UserRegistrationDate = user.UserRegistrationDate
                 };
@@ -102,6 +109,33 @@ namespace Cengaver.BL
 
             var result = await _userManager.DeleteAsync(user);
             return result.Succeeded;
+        }
+
+        public async Task<UserDto> GetCurrentUserAsync()
+        {
+            var userId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return null; // Or handle as appropriate
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return null;
+
+            return new UserDto
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                SicilNo = user.SicilNo,
+                UserRegistrationDate = user.UserRegistrationDate
+            };
+        }
+
+        private string GenerateSecurePassword()
+        {
+            // Implement a secure password generation strategy or use a library
+            return "DefaultPassword123!";
         }
     }
 }

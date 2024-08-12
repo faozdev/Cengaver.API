@@ -40,9 +40,13 @@ namespace Cengaver.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder); 
+            base.OnModelCreating(modelBuilder);
 
             // Configure User entity
+            modelBuilder.Entity<User>()
+                .Property(u => u.SicilNo)
+                .IsRequired(false);
+
             modelBuilder.Entity<User>()
                 .Property(u => u.Id)
                 .ValueGeneratedOnAdd(); 
@@ -50,6 +54,10 @@ namespace Cengaver.Persistence
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Id)
                 .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Name)
+                .IsRequired(false);
 
             // Configure User relationships
             modelBuilder.Entity<User>()
@@ -168,7 +176,7 @@ namespace Cengaver.Persistence
 
             // Configure Permission entity
             modelBuilder.Entity<Permission>()
-                .HasKey(p => new { p.RoleId, p.UserPermission });
+                .HasKey(p => p.Id);
 
             modelBuilder.Entity<Permission>()
                 .HasOne(p => p.Role)

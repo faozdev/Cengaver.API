@@ -11,7 +11,7 @@ namespace Cengaver.Dto
         public int  Id { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public int? WardenUserId { get; set; }
+        public string WardenUserId { get; set; }
         public DateTime DateOfAssignment { get; set; }
         public string GuardAssignedByUser { get; set; }
     }
@@ -20,7 +20,7 @@ namespace Cengaver.Dto
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public int WardenUserId { get; set; }
+        public string WardenUserId { get; set; }
         public DateTime DateOfAssignment { get; set; }
         public string GuardAssignedByUser { get; set; }
     }

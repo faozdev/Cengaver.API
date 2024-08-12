@@ -7,7 +7,7 @@ namespace Cengaver.Domain
         
         public string SicilNo { get; set; }
         public DateTime UserRegistrationDate { get; set; }
-
+        public string Name { get; set; }
         public ICollection<UserRole> UserRoles { get; set; }
         public ICollection<UserIsInTeamRelation> UserIsInTeamRelations { get; set; }
         public ICollection<GuardDuty> GuardDuties { get; set; }

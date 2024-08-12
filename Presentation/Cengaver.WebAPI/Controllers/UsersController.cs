@@ -8,6 +8,7 @@ using Cengaver.Dto;
 using Cengaver.WebAPI.Model;
 using Cengaver.WebAPI.Swagger;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace Cengaver.WebAPI.Controllers
 {
@@ -16,6 +17,23 @@ namespace Cengaver.WebAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+
+        [HttpGet("current-user")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var currentUser = await _userService.GetUserByIdAsync(userId);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+            return Ok(currentUser);
+        }
 
         public UsersController(IUserService userService)
         {

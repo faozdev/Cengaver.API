@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cengaver.Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240809143133_InitialCreate")]
+    [Migration("20240812191714_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -67,6 +67,7 @@ namespace Cengaver.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("WardenUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -178,13 +179,22 @@ namespace Cengaver.Persistence.Migrations
 
             modelBuilder.Entity("Cengaver.Domain.Permission", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserPermission")
-                        .HasColumnType("nvarchar(450)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("RoleId", "UserPermission");
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Permissions");
                 });
@@ -306,7 +316,6 @@ namespace Cengaver.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SicilNo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -550,7 +559,9 @@ namespace Cengaver.Persistence.Migrations
                 {
                     b.HasOne("Cengaver.Domain.User", "WardenUser")
                         .WithMany("GuardDuties")
-                        .HasForeignKey("WardenUserId");
+                        .HasForeignKey("WardenUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("WardenUser");
                 });

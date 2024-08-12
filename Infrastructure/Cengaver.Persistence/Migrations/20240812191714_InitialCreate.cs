@@ -30,7 +30,7 @@ namespace Cengaver.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    SicilNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SicilNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserRegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -235,7 +235,7 @@ namespace Cengaver.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    WardenUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    WardenUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DateOfAssignment = table.Column<DateTime>(type: "datetime2", nullable: false),
                     GuardAssignedByUser = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -246,7 +246,8 @@ namespace Cengaver.Persistence.Migrations
                         name: "FK_GuardDuties_AspNetUsers_WardenUserId",
                         column: x => x.WardenUserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -328,12 +329,14 @@ namespace Cengaver.Persistence.Migrations
                 name: "Permissions",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<int>(type: "int", nullable: false),
-                    UserPermission = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserPermission = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Permissions", x => new { x.RoleId, x.UserPermission });
+                    table.PrimaryKey("PK_Permissions", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Permissions_Roles_RoleId",
                         column: x => x.RoleId,
@@ -510,6 +513,11 @@ namespace Cengaver.Persistence.Migrations
                 name: "IX_GuardDutyNotes_NoteTypeId",
                 table: "GuardDutyNotes",
                 column: "NoteTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Permissions_RoleId",
+                table: "Permissions",
+                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TeamTransactionLogs_TeamId",

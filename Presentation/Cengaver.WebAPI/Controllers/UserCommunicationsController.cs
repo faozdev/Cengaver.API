@@ -20,71 +20,97 @@ namespace Cengaver.WebAPI.Controllers
             _userCommunicationService = userCommunicationService;
         }
 
-        // GET: api/UserCommunications
+        /// <summary>
+        /// Gets the list of all user communications.
+        /// </summary>
+        /// <returns>List of user communications.</returns>
+        [SwaggerResponse(200, type: typeof(SuccessResponse<List<UserCommunicationDto>>), description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(422, type: typeof(ValidationErrorResponse), description: SwaggerConstants.NotSuccessValidationError)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
         [HttpGet("get-user-communications")]
         public async Task<IActionResult> GetUserCommunications()
         {
-            var userCommunications = await _userCommunicationService.GetAllAsync().ConfigureAwait(false);
-            return Ok(userCommunications);
+            var serviceResult = await _userCommunicationService.GetUserCommunicationsAsync().ConfigureAwait(false);
+            return Ok(serviceResult);
         }
 
-        // GET: api/UserCommunications/5/1
+        /// <summary>
+        /// Gets a specific user communication by user ID and communication type ID.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="communicationTypeId">The ID of the communication type.</param>
+        /// <returns>Details of the specified user communication.</returns>
+        [SwaggerResponse(200, type: typeof(SuccessResponse<UserCommunicationDto>), description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
         [HttpGet("get-user-communication/{userId}/{communicationTypeId}")]
-        public async Task<IActionResult> GetUserCommunication(int userId, int communicationTypeId)
+        public async Task<IActionResult> GetUserCommunication(string userId, int communicationTypeId)
         {
-            var userCommunication = await _userCommunicationService.GetByIdAsync(userId, communicationTypeId).ConfigureAwait(false);
-            if (userCommunication == null)
-                return NotFound();
-            return Ok(userCommunication);
-        }
-
-        // POST: api/UserCommunications
-        [HttpPost("add-user-communication")]
-        public async Task<IActionResult> AddUserCommunication([FromBody] UserCommunicationDto userCommunicationDto)
-        {
-            // Map DTO to domain model
-            var userCommunication = new UserCommunication
-            {
-                UserId = userCommunicationDto.UserId,
-                CommunicationTypeId = userCommunicationDto.CommunicationTypeId,
-                CommunicationString = userCommunicationDto.CommunicationString
-            };
-
-            var serviceResult = await _userCommunicationService.AddAsync(userCommunication).ConfigureAwait(false);
-            return CreatedAtAction(nameof(GetUserCommunication), new { userId = serviceResult.UserId, communicationTypeId = serviceResult.CommunicationTypeId }, serviceResult);
-        }
-
-        // PUT: api/UserCommunications/5/1
-        [HttpPut("update-user-communication/{userId}/{communicationTypeId}")]
-        public async Task<IActionResult> UpdateUserCommunication(String userId, int communicationTypeId, [FromBody] UserCommunicationDto userCommunicationDto)
-        {
-            if (userId != userCommunicationDto.UserId || communicationTypeId != userCommunicationDto.CommunicationTypeId)
-                return BadRequest();
-
-            // Map DTO to domain model
-            var userCommunication = new UserCommunication
-            {
-                UserId = userCommunicationDto.UserId,
-                CommunicationTypeId = userCommunicationDto.CommunicationTypeId,
-                CommunicationString = userCommunicationDto.CommunicationString
-            };
-
-            var serviceResult = await _userCommunicationService.UpdateAsync(userCommunication).ConfigureAwait(false);
+            var serviceResult = await _userCommunicationService.GetUserCommunicationByIdAsync(userId, communicationTypeId).ConfigureAwait(false);
             if (serviceResult == null)
                 return NotFound();
             return Ok(serviceResult);
         }
 
-        // DELETE: api/UserCommunications/5/1
-        [HttpDelete("delete-user-communication/{userId}/{communicationTypeId}")]
-        public async Task<IActionResult> DeleteUserCommunication(int userId, int communicationTypeId)
+        /// <summary>
+        /// Adds a new user communication.
+        /// </summary>
+        /// <param name="userCommunicationDto">The user communication details to add.</param>
+        /// <returns>Result of the add operation.</returns>
+        [SwaggerResponse(201, type: typeof(SuccessResponse<UserCommunicationDto>), description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(422, type: typeof(ValidationErrorResponse), description: SwaggerConstants.NotSuccessValidationError)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
+        [HttpPost("add-user-communication")]
+        public async Task<IActionResult> AddUserCommunication([FromBody] UserCommunicationDto userCommunicationDto)
         {
-            var success = await _userCommunicationService.DeleteAsync(userId, communicationTypeId).ConfigureAwait(false);
+            var serviceResult = await _userCommunicationService.AddUserCommunicationAsync(userCommunicationDto).ConfigureAwait(false);
+            return CreatedAtAction(nameof(GetUserCommunication), new { userId = serviceResult.UserId, communicationTypeId = serviceResult.CommunicationTypeId }, serviceResult);
+        }
+
+        /// <summary>
+        /// Updates an existing user communication.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="communicationTypeId">The ID of the communication type.</param>
+        /// <param name="userCommunicationDto">The updated user communication details.</param>
+        /// <returns>Result of the update operation.</returns>
+        [SwaggerResponse(200, type: typeof(SuccessResponse<UserCommunicationDto>), description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
+        [SwaggerResponse(422, type: typeof(ValidationErrorResponse), description: SwaggerConstants.NotSuccessValidationError)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
+        [HttpPut("update-user-communication/{userId}/{communicationTypeId}")]
+        public async Task<IActionResult> UpdateUserCommunication(string userId, int communicationTypeId, [FromBody] UserCommunicationDto userCommunicationDto)
+        {
+            var serviceResult = await _userCommunicationService.UpdateUserCommunicationAsync(userId, communicationTypeId, userCommunicationDto).ConfigureAwait(false);
+            if (serviceResult == null)
+                return NotFound();
+            return Ok(serviceResult);
+        }
+
+        /// <summary>
+        /// Deletes a specific user communication by user ID and communication type ID.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="communicationTypeId">The ID of the communication type.</param>
+        /// <returns>Result of the delete operation.</returns>
+        [SwaggerResponse(204, description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
+        [HttpDelete("delete-user-communication/{userId}/{communicationTypeId}")]
+        public async Task<IActionResult> DeleteUserCommunication(string userId, int communicationTypeId)
+        {
+            var success = await _userCommunicationService.DeleteUserCommunicationAsync(userId, communicationTypeId).ConfigureAwait(false);
             if (!success)
                 return NotFound();
             return NoContent();
         }
     }
+
 
 
 }

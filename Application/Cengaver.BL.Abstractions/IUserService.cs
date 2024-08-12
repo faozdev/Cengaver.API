@@ -12,5 +12,7 @@ namespace Cengaver.BL.Abstractions
         Task<UserDto> AddUserAsync(UserDto userDto);
         Task<UserDto> UpdateUserAsync(string id, UserDto userDto);
         Task<bool> DeleteUserAsync(string id);
+        Task<UserDto> GetCurrentUserAsync();
+
     }
 }

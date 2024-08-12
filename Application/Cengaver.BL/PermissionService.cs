@@ -8,57 +8,71 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cengaver.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cengaver.BL
 {
     public class PermissionService : IPermissionService
     {
-        private readonly IGenericRepository<Permission> _permissionRepository;
-        private readonly IMapper _mapper;
+        private readonly DataContext _context;
+        private readonly IMapper _mapper; // Assuming you use AutoMapper for DTO mapping
 
-        public PermissionService(IGenericRepository<Permission> permissionRepository, IMapper mapper)
+        public PermissionService(DataContext context, IMapper mapper)
         {
-            _permissionRepository = permissionRepository;
+            _context = context;
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<PermissionDto>> GetAllAsync()
+        public async Task<List<PermissionDto>> GetPermissionsAsync()
         {
-            var permissions = await _permissionRepository.GetAllAsync().ConfigureAwait(false);
-            return _mapper.Map<IEnumerable<PermissionDto>>(permissions);
+            var permissions = await _context.Permissions.ToListAsync();
+            return _mapper.Map<List<PermissionDto>>(permissions);
         }
 
-        public async Task<PermissionDto> GetByIdAsync(int roleId, string userPermission)
+        public async Task<PermissionDto> GetPermissionByIdAsync(int id)
         {
-            var permission = await _permissionRepository.GetByIdAsync(roleId, userPermission).ConfigureAwait(false);
+            var permission = await _context.Permissions
+                .FirstOrDefaultAsync(p => p.Id == id);
             return _mapper.Map<PermissionDto>(permission);
         }
 
-        public async Task<PermissionDto> AddAsync(PermissionDto permissionDto)
+        public async Task<PermissionDto> AddPermissionAsync(PermissionDto permissionDto)
         {
             var permission = _mapper.Map<Permission>(permissionDto);
-            await _permissionRepository.AddAsync(permission).ConfigureAwait(false);
-            return permissionDto; // Return the DTO of the newly created permission
+            _context.Permissions.Add(permission);
+            await _context.SaveChangesAsync();
+            return _mapper.Map<PermissionDto>(permission);
         }
 
-        public async Task<PermissionDto> UpdateAsync(PermissionDto permissionDto)
+        public async Task<PermissionDto> UpdatePermissionAsync(int id, PermissionDto permissionDto)
         {
-            var permission = _mapper.Map<Permission>(permissionDto);
-            await _permissionRepository.UpdateAsync(permission).ConfigureAwait(false);
-            return permissionDto; // Return the DTO of the updated permission
+            var existingPermission = await _context.Permissions
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (existingPermission == null)
+            {
+                return null; // Or throw a custom exception
+            }
+
+            _mapper.Map(permissionDto, existingPermission);
+            _context.Permissions.Update(existingPermission);
+            await _context.SaveChangesAsync();
+            return _mapper.Map<PermissionDto>(existingPermission);
         }
 
-        public async Task<bool> DeleteAsync(int roleId, string userPermission)
+        public async Task<bool> DeletePermissionAsync(int id)
         {
-            try
+            var existingPermission = await _context.Permissions
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (existingPermission == null)
             {
-                await _permissionRepository.DeleteAsync(roleId, userPermission).ConfigureAwait(false);
-                return true; // Return true if deletion is successful
+                return false; // Or throw a custom exception
             }
-            catch (Exception)
-            {
-                return false; // Return false if any exception occurs
-            }
+
+            _context.Permissions.Remove(existingPermission);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
+
 }
