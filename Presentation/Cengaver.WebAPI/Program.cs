@@ -68,6 +68,7 @@ builder.Services.AddScoped<ITeamTransactionLogService, TeamTransactionLogService
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
+builder.Services.AddScoped<IUserTeamService, UserTeamService>();
 
 builder.Services.AddCors(options =>
 {
@@ -79,10 +80,8 @@ builder.Services.AddCors(options =>
                    .AllowAnyMethod();
         });
 });
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -118,20 +117,24 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
-  
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapGet("users/me", async (ClaimsPrincipal claims, DataContext context) =>
+
+app.MapControllers();
+app.MapIdentityApi<User>();
+
+app.MapGet("users/me", async (HttpContext httpContext, DataContext context) =>
 {
-    string userId = claims.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+    var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
     if (string.IsNullOrEmpty(userId))
     {
         return Results.BadRequest("User ID not found in claims");
@@ -144,14 +147,6 @@ app.MapGet("users/me", async (ClaimsPrincipal claims, DataContext context) =>
     }
 
     return Results.Ok(user);
-})
-    .RequireAuthorization();
-
-
-
-
-
-app.MapControllers();
-app.MapIdentityApi<User>();
+});
 
 app.Run();

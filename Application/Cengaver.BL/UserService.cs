@@ -51,6 +51,12 @@ namespace Cengaver.BL
             };
         }
 
+        public async Task<string> GetUserNameByIdAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            return user?.Name;
+        }
+
         public async Task<UserDto> AddUserAsync(UserDto userDto)
         {
             var user = new User

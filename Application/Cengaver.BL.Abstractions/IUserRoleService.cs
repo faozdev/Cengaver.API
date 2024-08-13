@@ -46,6 +46,8 @@ namespace Cengaver.BL.Abstractions
         /// <param name="roleId">The ID of the role to delete.</param>
         /// <returns>True if the deletion was successful; otherwise, false.</returns>
         Task<bool> DeleteUserRoleAsync(string userId, int roleId);
+
+        Task<List<UserRoleDto>> GetUserRolesByUserIdAsync(string userId);
     }
 
 

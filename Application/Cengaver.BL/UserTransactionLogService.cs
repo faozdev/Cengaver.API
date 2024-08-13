@@ -15,54 +15,84 @@ namespace Cengaver.BL
 {
     public class UserTransactionLogService : IUserTransactionLogService
     {
-        private readonly IGenericRepository<UserTransactionLog> _transactionLogRepository;
-        private readonly IMapper _mapper;
+        private readonly DataContext _context;
 
-        public UserTransactionLogService(IGenericRepository<UserTransactionLog> transactionLogRepository, IMapper mapper)
+        public UserTransactionLogService(DataContext context)
         {
-            _transactionLogRepository = transactionLogRepository;
-            _mapper = mapper;
+            _context = context;
         }
 
         public async Task<List<UserTransactionLogDto>> GetUserTransactionLogsAsync()
         {
-            var logs = await _transactionLogRepository.GetAllAsync().ConfigureAwait(false);
-            return _mapper.Map<List<UserTransactionLogDto>>(logs);
+            var logs = await _context.UserTransactionLogs
+                .Select(log => new UserTransactionLogDto
+                {
+                    Id = log.Id,
+                    UserId = log.UserId,
+                    Type = log.Type,
+                    CreatedDate = log.CreatedDate
+                })
+                .ToListAsync();
+            return logs;
         }
 
         public async Task<UserTransactionLogDto> GetUserTransactionLogByIdAsync(int id)
         {
-            var log = await _transactionLogRepository.GetByIdAsync(id).ConfigureAwait(false);
-            return log == null ? null : _mapper.Map<UserTransactionLogDto>(log);
+            var log = await _context.UserTransactionLogs
+                .Where(l => l.Id == id)
+                .Select(log => new UserTransactionLogDto
+                {
+                    Id = log.Id,
+                    UserId = log.UserId,
+                    Type = log.Type,
+                    CreatedDate = log.CreatedDate
+                })
+                .FirstOrDefaultAsync();
+            return log;
         }
 
-        public async Task<UserTransactionLogDto> AddUserTransactionLogAsync(UserTransactionLogCreateDto transactionLogDto)
+        public async Task<UserTransactionLogDto> AddUserTransactionLogAsync(UserTransactionLogDto userTransactionLogDto)
         {
-            var transactionLog = _mapper.Map<UserTransactionLog>(transactionLogDto);
-            await _transactionLogRepository.AddAsync(transactionLog).ConfigureAwait(false);
-            return _mapper.Map<UserTransactionLogDto>(transactionLog);
+            var log = new UserTransactionLog
+            {
+                UserId = userTransactionLogDto.UserId,
+                Type = userTransactionLogDto.Type,
+                CreatedDate = userTransactionLogDto.CreatedDate
+            };
+
+            _context.UserTransactionLogs.Add(log);
+            await _context.SaveChangesAsync();
+
+            userTransactionLogDto.Id = log.Id;
+            return userTransactionLogDto;
         }
 
-        public async Task<UserTransactionLogDto> UpdateUserTransactionLogAsync(int id, UserTransactionLogDto transactionLogDto)
+        public async Task<UserTransactionLogDto> UpdateUserTransactionLogAsync(int id, UserTransactionLogDto userTransactionLogDto)
         {
-            var existingLog = await _transactionLogRepository.GetByIdAsync(id).ConfigureAwait(false);
-            if (existingLog == null)
-                return null;
+            var log = await _context.UserTransactionLogs.FindAsync(id);
+            if (log == null) return null;
 
-            _mapper.Map(transactionLogDto, existingLog);
-            await _transactionLogRepository.UpdateAsync(existingLog).ConfigureAwait(false);
-            return _mapper.Map<UserTransactionLogDto>(existingLog);
+            log.UserId = userTransactionLogDto.UserId;
+            log.Type = userTransactionLogDto.Type;
+            log.CreatedDate = userTransactionLogDto.CreatedDate;
+
+            _context.UserTransactionLogs.Update(log);
+            await _context.SaveChangesAsync();
+
+            return userTransactionLogDto;
         }
 
         public async Task<bool> DeleteUserTransactionLogAsync(int id)
         {
-            var existingLog = await _transactionLogRepository.GetByIdAsync(id).ConfigureAwait(false);
-            if (existingLog == null)
-                return false;
+            var log = await _context.UserTransactionLogs.FindAsync(id);
+            if (log == null) return false;
 
-            await _transactionLogRepository.DeleteAsync(existingLog).ConfigureAwait(false);
+            _context.UserTransactionLogs.Remove(log);
+            await _context.SaveChangesAsync();
+
             return true;
         }
     }
+
 
 }

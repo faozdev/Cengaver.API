@@ -54,6 +54,24 @@ namespace Cengaver.WebAPI.Controllers
         }
 
         /// <summary>
+        /// Gets the list of permissions by Role ID.
+        /// </summary>
+        /// <param name="roleId">The Role ID to filter permissions.</param>
+        /// <returns>List of permissions associated with the given Role ID.</returns>
+        [SwaggerResponse(200, type: typeof(SuccessResponse<List<PermissionDto>>), description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
+        [HttpGet("get-permissions-by-role/{roleId}")]
+        public async Task<IActionResult> GetPermissionsByRoleId(int roleId)
+        {
+            var serviceResult = await _permissionService.GetPermissionsByRoleIdAsync(roleId).ConfigureAwait(false);
+            if (serviceResult == null || !serviceResult.Any())
+                return NotFound();
+            return Ok(serviceResult);
+        }
+
+        /// <summary>
         /// Adds a new permission.
         /// </summary>
         /// <param name="permissionDto">The permission details to add.</param>

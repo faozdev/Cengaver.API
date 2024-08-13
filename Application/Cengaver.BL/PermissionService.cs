@@ -37,6 +37,14 @@ namespace Cengaver.BL
             return _mapper.Map<PermissionDto>(permission);
         }
 
+        public async Task<List<PermissionDto>> GetPermissionsByRoleIdAsync(int roleId)
+        {
+            var permissions = await _context.Permissions
+                .Where(p => p.RoleId == roleId)
+                .ToListAsync();
+            return _mapper.Map<List<PermissionDto>>(permissions);
+        }
+
         public async Task<PermissionDto> AddPermissionAsync(PermissionDto permissionDto)
         {
             var permission = _mapper.Map<Permission>(permissionDto);

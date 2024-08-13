@@ -27,8 +27,9 @@ namespace Cengaver.WebAPI.Controllers
         /// <returns>List of user transaction logs.</returns>
         [SwaggerResponse(200, type: typeof(SuccessResponse<List<UserTransactionLogDto>>), description: SwaggerConstants.SuccessMessage)]
         [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(422, type: typeof(ValidationErrorResponse), description: SwaggerConstants.NotSuccessValidationError)]
         [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
-        [HttpGet("get-transaction-logs")]
+        [HttpGet("get-logs")]
         public async Task<IActionResult> GetUserTransactionLogs()
         {
             var serviceResult = await _userTransactionLogService.GetUserTransactionLogsAsync().ConfigureAwait(false);
@@ -44,7 +45,7 @@ namespace Cengaver.WebAPI.Controllers
         [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
         [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
         [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
-        [HttpGet("get-transaction-log/{id}")]
+        [HttpGet("get-log/{id}")]
         public async Task<IActionResult> GetUserTransactionLogById(int id)
         {
             var serviceResult = await _userTransactionLogService.GetUserTransactionLogByIdAsync(id).ConfigureAwait(false);
@@ -56,16 +57,16 @@ namespace Cengaver.WebAPI.Controllers
         /// <summary>
         /// Adds a new user transaction log.
         /// </summary>
-        /// <param name="transactionLogDto">The transaction log details to add.</param>
+        /// <param name="userTransactionLogDto">The user transaction log details to add.</param>
         /// <returns>Result of the add operation.</returns>
         [SwaggerResponse(201, type: typeof(SuccessResponse<UserTransactionLogDto>), description: SwaggerConstants.SuccessMessage)]
         [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
         [SwaggerResponse(422, type: typeof(ValidationErrorResponse), description: SwaggerConstants.NotSuccessValidationError)]
         [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
-        [HttpPost("add-transaction-log")]
-        public async Task<IActionResult> AddUserTransactionLog([FromBody] UserTransactionLogCreateDto transactionLogDto)
+        [HttpPost("add-log")]
+        public async Task<IActionResult> AddUserTransactionLog([FromBody] UserTransactionLogDto userTransactionLogDto)
         {
-            var serviceResult = await _userTransactionLogService.AddUserTransactionLogAsync(transactionLogDto).ConfigureAwait(false);
+            var serviceResult = await _userTransactionLogService.AddUserTransactionLogAsync(userTransactionLogDto).ConfigureAwait(false);
             return CreatedAtAction(nameof(GetUserTransactionLogById), new { id = serviceResult.Id }, serviceResult);
         }
 
@@ -73,17 +74,17 @@ namespace Cengaver.WebAPI.Controllers
         /// Updates an existing user transaction log.
         /// </summary>
         /// <param name="id">The ID of the transaction log to update.</param>
-        /// <param name="transactionLogDto">The updated transaction log details.</param>
+        /// <param name="userTransactionLogDto">The updated user transaction log details.</param>
         /// <returns>Result of the update operation.</returns>
         [SwaggerResponse(200, type: typeof(SuccessResponse<UserTransactionLogDto>), description: SwaggerConstants.SuccessMessage)]
         [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
         [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
         [SwaggerResponse(422, type: typeof(ValidationErrorResponse), description: SwaggerConstants.NotSuccessValidationError)]
         [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
-        [HttpPut("update-transaction-log/{id}")]
-        public async Task<IActionResult> UpdateUserTransactionLog(int id, [FromBody] UserTransactionLogDto transactionLogDto)
+        [HttpPut("update-log/{id}")]
+        public async Task<IActionResult> UpdateUserTransactionLog(int id, [FromBody] UserTransactionLogDto userTransactionLogDto)
         {
-            var serviceResult = await _userTransactionLogService.UpdateUserTransactionLogAsync(id, transactionLogDto).ConfigureAwait(false);
+            var serviceResult = await _userTransactionLogService.UpdateUserTransactionLogAsync(id, userTransactionLogDto).ConfigureAwait(false);
             if (serviceResult == null)
                 return NotFound();
             return Ok(serviceResult);
@@ -98,7 +99,7 @@ namespace Cengaver.WebAPI.Controllers
         [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
         [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
         [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
-        [HttpDelete("delete-transaction-log/{id}")]
+        [HttpDelete("delete-log/{id}")]
         public async Task<IActionResult> DeleteUserTransactionLog(int id)
         {
             var success = await _userTransactionLogService.DeleteUserTransactionLogAsync(id).ConfigureAwait(false);

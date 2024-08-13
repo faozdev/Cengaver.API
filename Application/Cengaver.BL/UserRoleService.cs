@@ -178,6 +178,39 @@ namespace Cengaver.BL
 
             return true;
         }
+
+        public async Task<List<UserRoleDto>> GetUserRolesByUserIdAsync(string userId)
+        {
+            var userRoles = await _context.UserRoles
+                .Include(ur => ur.User)
+                .Include(ur => ur.Role)
+                .Where(ur => ur.UserId == userId)
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+            var userRoleDtos = userRoles.Select(ur => new UserRoleDto
+            {
+                UserId = ur.UserId,
+                RoleId = ur.RoleId,
+                User = new UserDto
+                {
+                    Id = ur.User.Id,
+                    UserName = ur.User.UserName,
+                    Name = ur.User.Name,
+                    SicilNo = ur.User.SicilNo,
+                    UserRegistrationDate = ur.User.UserRegistrationDate
+                },
+                Role = new RoleDto
+                {
+                    Id = ur.Role.Id,
+                    RoleName = ur.Role.RoleName
+                }
+            }).ToList();
+
+            return userRoleDtos;
+        }
+
+
     }
 
 

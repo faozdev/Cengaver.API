@@ -232,6 +232,10 @@ namespace Cengaver.Persistence
 
             // Configure Team entity
             modelBuilder.Entity<Team>()
+                .Property(t => t.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Team>()
                 .HasKey(t => t.Id);
 
             modelBuilder.Entity<Team>()

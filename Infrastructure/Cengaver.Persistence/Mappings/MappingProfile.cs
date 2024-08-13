@@ -29,6 +29,22 @@ namespace Cengaver.Services.Mappings
 
             CreateMap<UserTransactionLog, UserTransactionLogDto>().ReverseMap(); 
             CreateMap<UserTransactionLogCreateDto, UserTransactionLog>();
+
+            CreateMap<TeamTransactionLogDto, TeamTransactionLog>()
+                .ForMember(dest => dest.TeamId, opt => opt.MapFrom(src => src.TeamId)); // Mapping nested objects
+
+            CreateMap<TeamTransactionLog, TeamTransactionLogDto>()
+                 .ForMember(dest => dest.TeamId, opt => opt.MapFrom(src => src.TeamId)); // Mapping nested objects
+
+            CreateMap<TeamDto, Team>(); // Ensure mapping is defined
+            CreateMap<Team, TeamDto>();
+
+            CreateMap<UserTeamDto, UserIsInTeamRelation>()
+            .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate));
+            CreateMap<UserIsInTeamRelation, UserTeamDto>()
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate));
+
+            CreateMap<UserTeamDto, UserIsInTeamRelation>().ReverseMap();
         }
     }
 

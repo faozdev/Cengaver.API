@@ -1,50 +1,76 @@
 ﻿using Cengaver.Domain;
 using Cengaver.BL.Abstractions;
 using Cengaver.Infrastructure.Extentions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using Cengaver.Dto;
+using Cengaver.Persistence;
 
 namespace Cengaver.BL
 {
     public class TeamTransactionLogService : ITeamTransactionLogService
     {
-        private readonly IGenericRepository<TeamTransactionLog> _teamTransactionLogRepository;
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public TeamTransactionLogService(IGenericRepository<TeamTransactionLog> teamTransactionLogRepository)
+        public TeamTransactionLogService(DataContext context, IMapper mapper)
         {
-            _teamTransactionLogRepository = teamTransactionLogRepository;
+            _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<TeamTransactionLog>> GetAllAsync()
+        public async Task<IEnumerable<TeamTransactionLogDto>> GetTeamTransactionsAsync()
         {
-            return await _teamTransactionLogRepository.GetAllAsync();
+            var logs = await _context.TeamTransactionLogs.ToListAsync().ConfigureAwait(false);
+            return _mapper.Map<IEnumerable<TeamTransactionLogDto>>(logs);
         }
 
-        public async Task<TeamTransactionLog> GetByIdAsync(int id)
+        public async Task<TeamTransactionLogDto> GetTeamTransactionByIdAsync(int id)
         {
-            return await _teamTransactionLogRepository.GetByIdAsync(id);
+            var log = await _context.TeamTransactionLogs.FindAsync(id).ConfigureAwait(false);
+            return log == null ? null : _mapper.Map<TeamTransactionLogDto>(log);
         }
 
-        public async Task AddAsync(TeamTransactionLog teamTransactionLog)
+        public async Task<TeamTransactionLogDto> AddTeamTransactionAsync(TeamTransactionLogDto teamTransactionLogDto)
         {
-            await _teamTransactionLogRepository.AddAsync(teamTransactionLog);
+            var log = _mapper.Map<TeamTransactionLog>(teamTransactionLogDto);
+            _context.TeamTransactionLogs.Add(log);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            return _mapper.Map<TeamTransactionLogDto>(log);
         }
 
-        public async Task UpdateAsync(TeamTransactionLog teamTransactionLog)
+        public async Task<TeamTransactionLogDto> UpdateTeamTransactionAsync(int id, TeamTransactionLogDto teamTransactionLogDto)
         {
-            await _teamTransactionLogRepository.UpdateAsync(teamTransactionLog);
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var teamTransactionLog = await _teamTransactionLogRepository.GetByIdAsync(id);
-            if (teamTransactionLog != null)
+            var existingLog = await _context.TeamTransactionLogs.FindAsync(id).ConfigureAwait(false);
+            if (existingLog == null)
             {
-                await _teamTransactionLogRepository.DeleteAsync(id);
+                return null;
             }
+
+            _mapper.Map(teamTransactionLogDto, existingLog);
+            _context.TeamTransactionLogs.Update(existingLog);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            return _mapper.Map<TeamTransactionLogDto>(existingLog);
+        }
+
+        public async Task<bool> DeleteTeamTransactionAsync(int id)
+        {
+            var log = await _context.TeamTransactionLogs.FindAsync(id).ConfigureAwait(false);
+            if (log == null)
+            {
+                return false;
+            }
+
+            _context.TeamTransactionLogs.Remove(log);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            return true;
         }
     }
+
+
 }

@@ -45,6 +45,8 @@ namespace Cengaver.BL.Abstractions
         /// <param name="id">The ID of the permission to delete.</param>
         /// <returns>A boolean indicating whether the delete operation was successful.</returns>
         Task<bool> DeletePermissionAsync(int id);
+
+        Task<List<PermissionDto>> GetPermissionsByRoleIdAsync(int roleId);
     }
 
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Cengaver.BL.Abstractions;
+using Cengaver.BL;
 
 namespace Cengaver.WebAPI.Controllers
 {
@@ -108,7 +109,25 @@ namespace Cengaver.WebAPI.Controllers
                 return NotFound();
             return NoContent();
         }
+
+        /// <summary>
+        /// Gets the list of user roles for a specific user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>List of user roles associated with the user.</returns>
+        [SwaggerResponse(200, type: typeof(SuccessResponse<List<UserRoleDto>>), description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
+        [HttpGet("get-user-roles-by-user/{userId}")]
+        public async Task<IActionResult> GetUserRolesByUser(string userId)
+        {
+            var serviceResult = await _userRoleService.GetUserRolesByUserIdAsync(userId).ConfigureAwait(false);
+            if (serviceResult == null || !serviceResult.Any())
+                return NotFound();
+            return Ok(serviceResult);
+        }
     }
 
-
+    
 }

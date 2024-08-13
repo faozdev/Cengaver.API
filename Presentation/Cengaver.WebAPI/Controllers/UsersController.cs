@@ -9,6 +9,8 @@ using Cengaver.WebAPI.Model;
 using Cengaver.WebAPI.Swagger;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cengaver.WebAPI.Controllers
 {
@@ -18,10 +20,20 @@ namespace Cengaver.WebAPI.Controllers
     {
         private readonly IUserService _userService;
 
+        [Authorize]
         [HttpGet("current-user")]
         public async Task<IActionResult> GetCurrentUser()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            if (token == null)
+            {
+                return Unauthorized();
+            }
+
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+            var userId = jsonToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
             if (userId == null)
             {
                 return Unauthorized();
@@ -32,6 +44,7 @@ namespace Cengaver.WebAPI.Controllers
             {
                 return NotFound();
             }
+
             return Ok(currentUser);
         }
 
@@ -57,6 +70,16 @@ namespace Cengaver.WebAPI.Controllers
                 return NotFound();
             return Ok(new SuccessResponse<UserDto> { Data = serviceResult });
         }
+
+        [HttpGet("get-username/{id}")]
+        public async Task<IActionResult> GetUserNameById(string id)
+        {
+            var userName = await _userService.GetUserNameByIdAsync(id);
+            if (userName == null)
+                return NotFound();
+            return Ok(new SuccessResponse<string> { Data = userName });
+        }
+
 
         [HttpPost("add-user")]
         public async Task<IActionResult> AddUser([FromBody] UserDto userDto)

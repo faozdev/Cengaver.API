@@ -1,4 +1,5 @@
 ﻿using Cengaver.Domain;
+using Cengaver.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,11 @@ namespace Cengaver.BL.Abstractions
 {
     public interface ITeamTransactionLogService
     {
-        Task<IEnumerable<TeamTransactionLog>> GetAllAsync();
-        Task<TeamTransactionLog> GetByIdAsync(int id);
-        Task AddAsync(TeamTransactionLog teamTransactionLog);
-        Task UpdateAsync(TeamTransactionLog teamTransactionLog);
-        Task DeleteAsync(int id);
+        Task<IEnumerable<TeamTransactionLogDto>> GetTeamTransactionsAsync();
+        Task<TeamTransactionLogDto> GetTeamTransactionByIdAsync(int id);
+        Task<TeamTransactionLogDto> AddTeamTransactionAsync(TeamTransactionLogDto teamTransactionLogDto);
+        Task<TeamTransactionLogDto> UpdateTeamTransactionAsync(int id, TeamTransactionLogDto teamTransactionLogDto);
+        Task<bool> DeleteTeamTransactionAsync(int id);
     }
+
 }

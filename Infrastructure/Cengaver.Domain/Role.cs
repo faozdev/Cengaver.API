@@ -8,6 +8,6 @@ namespace Cengaver.Domain
         public string RoleName { get; set; }
 
         public ICollection<Permission> Permissions { get; set; }
-        public ICollection<UserRole> UserRoles { get; set; }
+        public ICollection<UserRole> UserRoles { get; set; }     
     }
 }

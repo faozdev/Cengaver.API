@@ -2,6 +2,10 @@
 using Cengaver.BL;
 using Cengaver.BL.Abstractions;
 using Microsoft.AspNetCore.Mvc;
+using Cengaver.WebAPI.Model;
+using Cengaver.WebAPI.Swagger;
+using Swashbuckle.AspNetCore.Annotations;
+using Cengaver.Dto;
 
 namespace Cengaver.WebAPI.Controllers
 {
@@ -9,62 +13,99 @@ namespace Cengaver.WebAPI.Controllers
     [Route("api/[controller]")]
     public class TeamTransactionsController : ControllerBase
     {
-        private readonly ITeamTransactionLogService _teamTransactionLogService;
+        private readonly ITeamTransactionLogService _teamTransactionService;
 
-        public TeamTransactionsController(ITeamTransactionLogService teamTransactionLogService)
+        public TeamTransactionsController(ITeamTransactionLogService teamTransactionService)
         {
-            _teamTransactionLogService = teamTransactionLogService;
+            _teamTransactionService = teamTransactionService;
         }
 
-        // GET: api/TeamTransactions
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<TeamTransactionLog>>> GetTeamTransactions()
+        /// <summary>
+        /// Gets the list of all team transactions.
+        /// </summary>
+        /// <returns>List of team transactions.</returns>
+        [SwaggerResponse(200, type: typeof(SuccessResponse<List<TeamTransactionLogDto>>), description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(422, type: typeof(ValidationErrorResponse), description: SwaggerConstants.NotSuccessValidationError)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
+        [HttpGet("get-team-transactions")]
+        public async Task<IActionResult> GetTeamTransactions()
         {
-            var teamTransactions = await _teamTransactionLogService.GetAllAsync();
-            return Ok(teamTransactions);
+            var serviceResult = await _teamTransactionService.GetTeamTransactionsAsync().ConfigureAwait(false);
+            return Ok(serviceResult);
         }
 
-        // GET: api/TeamTransactions/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TeamTransactionLog>> GetTeamTransaction(int id)
+        /// <summary>
+        /// Gets a specific team transaction by ID.
+        /// </summary>
+        /// <param name="id">The ID of the team transaction.</param>
+        /// <returns>Details of the specified team transaction.</returns>
+        [SwaggerResponse(200, type: typeof(SuccessResponse<TeamTransactionLogDto>), description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
+        [HttpGet("get-team-transaction/{id}")]
+        public async Task<IActionResult> GetTeamTransactionById(int id)
         {
-            var teamTransaction = await _teamTransactionLogService.GetByIdAsync(id);
-
-            if (teamTransaction == null)
-            {
+            var serviceResult = await _teamTransactionService.GetTeamTransactionByIdAsync(id).ConfigureAwait(false);
+            if (serviceResult == null)
                 return NotFound();
-            }
-
-            return Ok(teamTransaction);
+            return Ok(serviceResult);
         }
 
-        // POST: api/TeamTransactions
-        [HttpPost]
-        public async Task<ActionResult<TeamTransactionLog>> PostTeamTransaction(TeamTransactionLog teamTransactionLog)
+        /// <summary>
+        /// Adds a new team transaction.
+        /// </summary>
+        /// <param name="teamTransactionLogDto">The team transaction details to add.</param>
+        /// <returns>Result of the add operation.</returns>
+        [SwaggerResponse(201, type: typeof(SuccessResponse<TeamTransactionLogDto>), description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(422, type: typeof(ValidationErrorResponse), description: SwaggerConstants.NotSuccessValidationError)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
+        [HttpPost("add-team-transaction")]
+        public async Task<IActionResult> AddTeamTransaction([FromBody] TeamTransactionLogDto teamTransactionLogDto)
         {
-            await _teamTransactionLogService.AddAsync(teamTransactionLog);
-            return CreatedAtAction(nameof(GetTeamTransaction), new { id = teamTransactionLog.Id }, teamTransactionLog);
+            var serviceResult = await _teamTransactionService.AddTeamTransactionAsync(teamTransactionLogDto).ConfigureAwait(false);
+            return CreatedAtAction(nameof(GetTeamTransactionById), new { id = serviceResult.Id }, serviceResult);
         }
 
-        // PUT: api/TeamTransactions/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTeamTransaction(int id, TeamTransactionLog teamTransactionLog)
+        /// <summary>
+        /// Updates an existing team transaction.
+        /// </summary>
+        /// <param name="id">The ID of the team transaction to update.</param>
+        /// <param name="teamTransactionLogDto">The updated team transaction details.</param>
+        /// <returns>Result of the update operation.</returns>
+        [SwaggerResponse(200, type: typeof(SuccessResponse<TeamTransactionLogDto>), description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
+        [SwaggerResponse(422, type: typeof(ValidationErrorResponse), description: SwaggerConstants.NotSuccessValidationError)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
+        [HttpPut("update-team-transaction/{id}")]
+        public async Task<IActionResult> UpdateTeamTransaction(int id, [FromBody] TeamTransactionLogDto teamTransactionLogDto)
         {
-            if (id != teamTransactionLog.Id)
-            {
-                return BadRequest();
-            }
-
-            await _teamTransactionLogService.UpdateAsync(teamTransactionLog);
-            return NoContent();
+            var serviceResult = await _teamTransactionService.UpdateTeamTransactionAsync(id, teamTransactionLogDto).ConfigureAwait(false);
+            if (serviceResult == null)
+                return NotFound();
+            return Ok(serviceResult);
         }
 
-        // DELETE: api/TeamTransactions/5
-        [HttpDelete("{id}")]
+        /// <summary>
+        /// Deletes a specific team transaction by ID.
+        /// </summary>
+        /// <param name="id">The ID of the team transaction to delete.</param>
+        /// <returns>Result of the delete operation.</returns>
+        [SwaggerResponse(204, description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
+        [HttpDelete("delete-team-transaction/{id}")]
         public async Task<IActionResult> DeleteTeamTransaction(int id)
         {
-            await _teamTransactionLogService.DeleteAsync(id);
+            var success = await _teamTransactionService.DeleteTeamTransactionAsync(id).ConfigureAwait(false);
+            if (!success)
+                return NotFound();
             return NoContent();
         }
     }
+
 }
