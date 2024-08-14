@@ -43,6 +43,8 @@ namespace Cengaver.Infrastructure.Repository
         /// <param name="userCommunication">The user communication entity to delete.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         Task DeleteAsync(UserCommunication userCommunication);
+
+        Task<List<UserCommunication>> GetByUserIdAsync(string userId);
     }
 
 }

@@ -20,7 +20,7 @@ namespace Cengaver.WebAPI.Controllers
     {
         private readonly IUserService _userService;
 
-        [Authorize]
+        
         [HttpGet("current-user")]
         public async Task<IActionResult> GetCurrentUser()
         {
@@ -57,9 +57,10 @@ namespace Cengaver.WebAPI.Controllers
         public async Task<IActionResult> GetUsers()
         {
             var serviceResult = await _userService.GetUsersAsync();
-            var userList = serviceResult.ToList(); 
-            return Ok(new SuccessResponse<List<UserDto>> { Data = userList });
+            var userList = serviceResult.ToList();
+            return Ok(new SuccessResponse<List<UserDto>>(userList));
         }
+
 
 
         [HttpGet("get-user/{id}")]
@@ -68,8 +69,9 @@ namespace Cengaver.WebAPI.Controllers
             var serviceResult = await _userService.GetUserByIdAsync(id);
             if (serviceResult == null)
                 return NotFound();
-            return Ok(new SuccessResponse<UserDto> { Data = serviceResult });
+            return Ok(new SuccessResponse<UserDto>(serviceResult));
         }
+
 
         [HttpGet("get-username/{id}")]
         public async Task<IActionResult> GetUserNameById(string id)
@@ -77,8 +79,9 @@ namespace Cengaver.WebAPI.Controllers
             var userName = await _userService.GetUserNameByIdAsync(id);
             if (userName == null)
                 return NotFound();
-            return Ok(new SuccessResponse<string> { Data = userName });
+            return Ok(new SuccessResponse<string>(userName));
         }
+
 
 
         [HttpPost("add-user")]
@@ -94,8 +97,9 @@ namespace Cengaver.WebAPI.Controllers
             var serviceResult = await _userService.UpdateUserAsync(id, userDto);
             if (serviceResult == null)
                 return NotFound();
-            return Ok(new SuccessResponse<UserDto> { Data = serviceResult });
+            return Ok(new SuccessResponse<UserDto>(serviceResult)); // Parametreli yapıcı metod kullanımı
         }
+
 
         [HttpDelete("delete-user/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
@@ -104,6 +108,25 @@ namespace Cengaver.WebAPI.Controllers
             if (!success)
                 return NotFound();
             return NoContent();
+        }
+
+        [HttpGet("get-names")]
+        public async Task<IActionResult> GetNames()
+        {
+            var names = await _userService.GetNamesAsync();
+            return Ok(new SuccessResponse<IEnumerable<string>>(names));
+        }
+
+        [HttpGet("GetUserIdByName/{name}")]
+        public async Task<IActionResult> GetUserIdByName(string name)
+        {
+            var userId = await _userService.GetUserIdByNameAsync(name);
+            if (userId == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            return Ok(userId);
         }
     }
 

@@ -59,7 +59,9 @@ builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IGuardDutyService, GuardDutyService>();
 builder.Services.AddScoped<IGuardDutyNoteService, GuardDutyNoteService>();
+builder.Services.AddScoped<IGuardDutyNoteRepository, GuardDutyNoteRepository>();
 builder.Services.AddScoped<IGuardDutyNoteTypeService, GuardDutyNoteTypeService>();
+builder.Services.AddScoped<IGuardDutyBreakRepository, GuardDutyBreakRepository>();
 builder.Services.AddScoped<IGuardDutyBreakService, GuardDutyBreakService>();
 builder.Services.AddScoped<IGuardDutyBreakTypeService, GuardDutyBreakTypeService>();
 builder.Services.AddScoped<IUserCommunicationRepository, UserCommunicationRepository>();
@@ -67,6 +69,8 @@ builder.Services.AddScoped<IUserCommunicationService, UserCommunicationService>(
 builder.Services.AddScoped<ITeamTransactionLogService, TeamTransactionLogService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IUserIsInTeamRelationRepository, UserIsInTeamRelationRepository>();
+builder.Services.AddScoped<IUserIsInTeamRelationService, UserIsInTeamRelationService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<IUserTeamService, UserTeamService>();
 

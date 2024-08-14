@@ -47,6 +47,7 @@ namespace Cengaver.BL.Abstractions
         /// <param name="communicationTypeId">The ID of the communication type.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating success or failure.</returns>
         Task<bool> DeleteUserCommunicationAsync(string userId, int communicationTypeId);
+        Task<List<UserCommunicationDto>> GetUserCommunicationsByUserIdAsync(string userId);
     }
 
 }

@@ -70,6 +70,13 @@ namespace Cengaver.Infrastructure.Repository
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<List<UserCommunication>> GetByUserIdAsync(string userId)
+        {
+            return await _context.UserCommunications
+                .Where(uc => uc.UserId == userId)
+                .ToListAsync();
+        }
     }
 
 }

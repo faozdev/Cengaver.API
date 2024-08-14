@@ -45,6 +45,9 @@ namespace Cengaver.BL.Abstractions
         /// <param name="teamId">The ID of the team.</param>
         /// <returns>True if the deletion was successful, otherwise false.</returns>
         Task<bool> DeleteUserFromTeamAsync(string userId, int teamId);
+
+        Task<List<UserTeamDto>> GetUsersByTeamIdAsync(int teamId);
+
     }
 
 }

@@ -92,6 +92,24 @@ namespace Cengaver.WebAPI.Controllers
         }
 
         /// <summary>
+        /// Gets all user communications for a specific user ID.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>List of user communications for the specified user.</returns>
+        [SwaggerResponse(200, type: typeof(SuccessResponse<List<UserCommunicationDto>>), description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
+        [HttpGet("get-user-communications/{userId}")]
+        public async Task<IActionResult> GetUserCommunicationsByUserId(string userId)
+        {
+            var serviceResult = await _userCommunicationService.GetUserCommunicationsByUserIdAsync(userId).ConfigureAwait(false);
+            if (serviceResult == null || !serviceResult.Any())
+                return NotFound();
+            return Ok(serviceResult);
+        }
+
+        /// <summary>
         /// Deletes a specific user communication by user ID and communication type ID.
         /// </summary>
         /// <param name="userId">The ID of the user.</param>

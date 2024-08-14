@@ -15,14 +15,16 @@ namespace Cengaver.WebAPI.Controllers
     public class GuardDutiesController : ControllerBase
     {
         private readonly IGuardDutyService _guardDutyService;
-        private readonly IMapper _mapper;
 
-        public GuardDutiesController(IGuardDutyService guardDutyService, IMapper mapper)
+        public GuardDutiesController(IGuardDutyService guardDutyService)
         {
             _guardDutyService = guardDutyService;
-            _mapper = mapper;
         }
 
+        /// <summary>
+        /// Gets the list of all guard duties.
+        /// </summary>
+        /// <returns>List of guard duties.</returns>
         [SwaggerResponse(200, type: typeof(SuccessResponse<List<GuardDutyDto>>), description: SwaggerConstants.SuccessMessage)]
         [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
         [SwaggerResponse(422, type: typeof(ValidationErrorResponse), description: SwaggerConstants.NotSuccessValidationError)]
@@ -30,10 +32,15 @@ namespace Cengaver.WebAPI.Controllers
         [HttpGet("get-guard-duties")]
         public async Task<IActionResult> GetGuardDuties()
         {
-            var guardDuties = await _guardDutyService.GetGuardDutiesAsync().ConfigureAwait(false);
-            return Ok(new SuccessResponse<List<GuardDutyDto>> { Data = guardDuties });
+            var serviceResult = await _guardDutyService.GetGuardDutiesAsync().ConfigureAwait(false);
+            return Ok(serviceResult);
         }
 
+        /// <summary>
+        /// Gets a specific guard duty by ID.
+        /// </summary>
+        /// <param name="id">The ID of the guard duty.</param>
+        /// <returns>Details of the specified guard duty.</returns>
         [SwaggerResponse(200, type: typeof(SuccessResponse<GuardDutyDto>), description: SwaggerConstants.SuccessMessage)]
         [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
         [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
@@ -41,27 +48,54 @@ namespace Cengaver.WebAPI.Controllers
         [HttpGet("get-guard-duty/{id}")]
         public async Task<IActionResult> GetGuardDutyById(int id)
         {
-            var guardDuty = await _guardDutyService.GetGuardDutyByIdAsync(id).ConfigureAwait(false);
-            if (guardDuty == null)
+            var serviceResult = await _guardDutyService.GetGuardDutyByIdAsync(id).ConfigureAwait(false);
+            if (serviceResult == null)
                 return NotFound();
-
-            return Ok(new SuccessResponse<GuardDutyDto> { Data = guardDuty });
+            return Ok(serviceResult);
         }
 
+        /// <summary>
+        /// Gets the list of guard duties assigned to a specific Warden User by their ID.
+        /// </summary>
+        /// <param name="wardenUserId">The ID of the Warden User.</param>
+        /// <returns>List of guard duties assigned to the specified Warden User.</returns>
+        [SwaggerResponse(200, type: typeof(SuccessResponse<List<GuardDutyDto>>), description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
+        [HttpGet("get-guard-duties-by-warden/{wardenUserId}")]
+        public async Task<IActionResult> GetGuardDutiesByWardenUserId(string wardenUserId)
+        {
+            var serviceResult = await _guardDutyService.GetGuardDutiesByWardenUserIdAsync(wardenUserId).ConfigureAwait(false);
+
+            if (serviceResult == null || !serviceResult.Any())
+                return NotFound();
+
+            return Ok(serviceResult);
+        }
+        /*
+        /// <summary>
+        /// Adds a new guard duty.
+        /// </summary>
+        /// <param name="guardDutyDto">The guard duty details to add.</param>
+        /// <returns>Result of the add operation.</returns>
         [SwaggerResponse(201, type: typeof(SuccessResponse<GuardDutyDto>), description: SwaggerConstants.SuccessMessage)]
         [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
         [SwaggerResponse(422, type: typeof(ValidationErrorResponse), description: SwaggerConstants.NotSuccessValidationError)]
         [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
         [HttpPost("add-guard-duty")]
-        public async Task<IActionResult> AddGuardDuty([FromBody] GuardDutyCreateDto guardDutyCreateDto)
+        public async Task<IActionResult> AddGuardDuty([FromBody] GuardDutyDto guardDutyDto)
         {
-            var guardDutyDto = await _guardDutyService.AddGuardDutyAsync(guardDutyCreateDto).ConfigureAwait(false);
-            if (guardDutyDto == null)
-                return BadRequest("Error creating GuardDuty.");
-
-            return CreatedAtAction(nameof(GetGuardDutyById), new { id = guardDutyDto.Id }, new SuccessResponse<GuardDutyDto> { Data = guardDutyDto });
+            var serviceResult = await _guardDutyService.AddGuardDutyAsync(guardDutyDto).ConfigureAwait(false);
+            return CreatedAtAction(nameof(GetGuardDutyById), new { id = serviceResult.Id }, serviceResult);
         }
-
+        */
+        /// <summary>
+        /// Updates an existing guard duty.
+        /// </summary>
+        /// <param name="id">The ID of the guard duty to update.</param>
+        /// <param name="guardDutyDto">The updated guard duty details.</param>
+        /// <returns>Result of the update operation.</returns>
         [SwaggerResponse(200, type: typeof(SuccessResponse<GuardDutyDto>), description: SwaggerConstants.SuccessMessage)]
         [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
         [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
@@ -70,16 +104,17 @@ namespace Cengaver.WebAPI.Controllers
         [HttpPut("update-guard-duty/{id}")]
         public async Task<IActionResult> UpdateGuardDuty(int id, [FromBody] GuardDutyDto guardDutyDto)
         {
-            if (id != guardDutyDto.Id)
-                return BadRequest();
-
-            var updatedGuardDutyDto = await _guardDutyService.UpdateGuardDutyAsync(id, guardDutyDto).ConfigureAwait(false);
-            if (updatedGuardDutyDto == null)
+            var serviceResult = await _guardDutyService.UpdateGuardDutyAsync(id, guardDutyDto).ConfigureAwait(false);
+            if (serviceResult == null)
                 return NotFound();
-
-            return Ok(new SuccessResponse<GuardDutyDto> { Data = updatedGuardDutyDto });
+            return Ok(serviceResult);
         }
 
+        /// <summary>
+        /// Deletes a specific guard duty by ID.
+        /// </summary>
+        /// <param name="id">The ID of the guard duty to delete.</param>
+        /// <returns>Result of the delete operation.</returns>
         [SwaggerResponse(204, description: SwaggerConstants.SuccessMessage)]
         [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
         [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
@@ -87,16 +122,29 @@ namespace Cengaver.WebAPI.Controllers
         [HttpDelete("delete-guard-duty/{id}")]
         public async Task<IActionResult> DeleteGuardDuty(int id)
         {
-            var result = await _guardDutyService.DeleteGuardDutyAsync(id).ConfigureAwait(false);
-            if (!result)
+            var success = await _guardDutyService.DeleteGuardDutyAsync(id).ConfigureAwait(false);
+            if (!success)
                 return NotFound();
-
             return NoContent();
         }
+
+        /// <summary>
+        /// Adds a new guard duty.
+        /// </summary>
+        /// <param name="guardDutyDto">The guard duty details to add.</param>
+        /// <returns>Result of the add operation.</returns>
+        [SwaggerResponse(201, type: typeof(SuccessResponse<GuardDutyDto>), description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(422, type: typeof(ValidationErrorResponse), description: SwaggerConstants.NotSuccessValidationError)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
+        [HttpPost("add-guard-duty")]
+        public async Task<IActionResult> AddGuardDuty([FromBody] GuardDutyDto guardDutyDto)
+        {
+            var serviceResult = await _guardDutyService.AddGuardDutyAsync(guardDutyDto).ConfigureAwait(false);
+            return CreatedAtAction(nameof(GetGuardDutyById), new { id = serviceResult.Id }, serviceResult);
+        }
+
     }
-
-
-
 
 
 }

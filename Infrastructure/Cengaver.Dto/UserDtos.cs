@@ -8,7 +8,7 @@ namespace Cengaver.Dto
 {
     public class UserDto
     {
-        public string Id { get; set; } // Changed to string to match IdentityUser's Id type
+        public string Id { get; set; } 
         public string UserName { get; set; }
         public string Name { get; set; } 
         public string SicilNo { get; set; }

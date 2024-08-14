@@ -11,7 +11,10 @@ namespace Cengaver.Dto
         public string UserId { get; set; }
         public int TeamId { get; set; }
         public DateTime CreatedDate { get; set; }
+        public UserDto User { get; set; }
+        public TeamDto Team { get; set; }
     }
+
 
     public class UserIsInTeamRelationCreateDto
     {
@@ -19,5 +22,8 @@ namespace Cengaver.Dto
         public int TeamId { get; set; }
         public DateTime CreatedDate { get; set; }
     }
-
+    public class UserIsInTeamRelationUpdateDto
+    {
+        public DateTime CreatedDate { get; set; }
+    }
 }

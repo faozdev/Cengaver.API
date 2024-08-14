@@ -111,6 +111,18 @@ namespace Cengaver.BL
             await _context.SaveChangesAsync().ConfigureAwait(false);
             return true;
         }
+
+        public async Task<List<UserTeamDto>> GetUsersByTeamIdAsync(int teamId)
+        {
+            var userTeamEntities = await _context.UserIsInTeamRelations
+                .Where(ut => ut.TeamId == teamId)
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+            return _mapper.Map<List<UserTeamDto>>(userTeamEntities);
+        }
+
+
     }
 
 }

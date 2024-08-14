@@ -143,5 +143,22 @@ namespace Cengaver.BL
             // Implement a secure password generation strategy or use a library
             return "DefaultPassword123!";
         }
+
+        public async Task<IEnumerable<string>> GetNamesAsync()
+        {
+            var users = await _userManager.Users
+                .Select(u => u.Name)  
+                .ToListAsync();
+            return users;
+        }
+
+        public async Task<string> GetUserIdByNameAsync(string name)
+        {
+            var user = await _userManager.Users
+                .FirstOrDefaultAsync(u => u.Name == name);
+
+            return user?.Id;
+        }
+
     }
 }

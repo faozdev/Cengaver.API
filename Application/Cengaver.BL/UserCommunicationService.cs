@@ -91,6 +91,22 @@ namespace Cengaver.BL
             await _userCommunicationRepository.DeleteAsync(userCommunication).ConfigureAwait(false);
             return true;
         }
+
+        public async Task<List<UserCommunicationDto>> GetUserCommunicationsByUserIdAsync(string userId)
+        {
+            var userCommunications = await _userCommunicationRepository.GetByUserIdAsync(userId);
+            if (userCommunications == null)
+            {
+                return null; // Or throw an exception based on your error handling strategy
+            }
+
+            return userCommunications.Select(uc => new UserCommunicationDto
+            {
+                UserId = uc.UserId,
+                CommunicationTypeId = uc.CommunicationTypeId,
+                CommunicationString = uc.CommunicationString
+            }).ToList();
+        }
     }
 
 }

@@ -107,6 +107,25 @@ namespace Cengaver.WebAPI.Controllers
                 return NotFound();
             return NoContent();
         }
+
+        /// <summary>
+        /// Gets all users associated with a specific team.
+        /// </summary>
+        /// <param name="teamId">The ID of the team.</param>
+        /// <returns>List of users associated with the specified team.</returns>
+        [SwaggerResponse(200, type: typeof(SuccessResponse<List<UserTeamDto>>), description: SwaggerConstants.SuccessMessage)]
+        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
+        [SwaggerResponse(404, type: typeof(ErrorResponse), description: SwaggerConstants.NotFoundMessage)]
+        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
+        [HttpGet("get-users-by-team/{teamId}")]
+        public async Task<IActionResult> GetUsersByTeamId(int teamId)
+        {
+            var serviceResult = await _userTeamService.GetUsersByTeamIdAsync(teamId).ConfigureAwait(false);
+            if (serviceResult == null || !serviceResult.Any())
+                return NotFound();
+            return Ok(serviceResult);
+        }
+
     }
 
 }

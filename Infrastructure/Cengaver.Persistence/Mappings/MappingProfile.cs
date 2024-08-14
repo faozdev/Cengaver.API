@@ -25,6 +25,12 @@ namespace Cengaver.Services.Mappings
             CreateMap<GuardDuty, GuardDutyDto>();
             CreateMap<GuardDutyDto, GuardDuty>();
 
+            CreateMap<GuardDutyBreak, GuardDutyBreakDto>()
+            .ReverseMap(); 
+
+            CreateMap<GuardDutyBreakType, GuardDutyBreakTypeDto>()
+                .ReverseMap();
+
             CreateMap<UserCommunication, UserCommunicationDto>().ReverseMap();
 
             CreateMap<UserTransactionLog, UserTransactionLogDto>().ReverseMap(); 
@@ -45,6 +51,23 @@ namespace Cengaver.Services.Mappings
                 .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate));
 
             CreateMap<UserTeamDto, UserIsInTeamRelation>().ReverseMap();
+
+            CreateMap<GuardDutyNoteDto, GuardDutyNote>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore()) // Adjust as needed
+            .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate))
+            .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
+            .ForMember(dest => dest.GuardDutyId, opt => opt.MapFrom(src => src.GuardDutyId))
+            .ForMember(dest => dest.NoteTypeId, opt => opt.MapFrom(src => src.NoteTypeId))
+            .ForMember(dest => dest.IsDeleted, opt => opt.Ignore()); // or configure as needed
+
+            CreateMap<GuardDutyNote, GuardDutyNoteDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate))
+                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
+                .ForMember(dest => dest.GuardDutyId, opt => opt.MapFrom(src => src.GuardDutyId))
+                .ForMember(dest => dest.NoteTypeId, opt => opt.MapFrom(src => src.NoteTypeId))
+                .ForMember(dest => dest.IsDeleted, opt => opt.Ignore()); // or configure as needed
+
         }
     }
 
