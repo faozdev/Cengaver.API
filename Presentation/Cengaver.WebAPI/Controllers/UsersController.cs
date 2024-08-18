@@ -61,8 +61,6 @@ namespace Cengaver.WebAPI.Controllers
             return Ok(new SuccessResponse<List<UserDto>>(userList));
         }
 
-
-
         [HttpGet("get-user/{id}")]
         public async Task<IActionResult> GetUserById(string id)
         {
@@ -72,7 +70,6 @@ namespace Cengaver.WebAPI.Controllers
             return Ok(new SuccessResponse<UserDto>(serviceResult));
         }
 
-
         [HttpGet("get-username/{id}")]
         public async Task<IActionResult> GetUserNameById(string id)
         {
@@ -81,8 +78,6 @@ namespace Cengaver.WebAPI.Controllers
                 return NotFound();
             return Ok(new SuccessResponse<string>(userName));
         }
-
-
 
         [HttpPost("add-user")]
         public async Task<IActionResult> AddUser([FromBody] UserDto userDto)
@@ -97,9 +92,8 @@ namespace Cengaver.WebAPI.Controllers
             var serviceResult = await _userService.UpdateUserAsync(id, userDto);
             if (serviceResult == null)
                 return NotFound();
-            return Ok(new SuccessResponse<UserDto>(serviceResult)); // Parametreli yapıcı metod kullanımı
+            return Ok(new SuccessResponse<UserDto>(serviceResult)); 
         }
-
 
         [HttpDelete("delete-user/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
@@ -125,11 +119,7 @@ namespace Cengaver.WebAPI.Controllers
             {
                 return NotFound("User not found.");
             }
-
             return Ok(userId);
         }
     }
-
-
-
 }

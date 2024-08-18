@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cengaver.WebAPI.Controllers
 {
-    [Authorize] // Require authentication for all actions in this controller
+    [Authorize] 
     public class ProtectedController : Controller
     {
         public IActionResult Index()

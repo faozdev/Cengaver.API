@@ -15,7 +15,6 @@ namespace Cengaver.Services.Mappings
     {
         public MappingProfile()
         {
-            // All mappings
             CreateMap<User, UserDto>().ReverseMap();
 
             CreateMap<Permission, PermissionDto>().ReverseMap();
@@ -37,12 +36,12 @@ namespace Cengaver.Services.Mappings
             CreateMap<UserTransactionLogCreateDto, UserTransactionLog>();
 
             CreateMap<TeamTransactionLogDto, TeamTransactionLog>()
-                .ForMember(dest => dest.TeamId, opt => opt.MapFrom(src => src.TeamId)); // Mapping nested objects
+                .ForMember(dest => dest.TeamId, opt => opt.MapFrom(src => src.TeamId)); 
 
             CreateMap<TeamTransactionLog, TeamTransactionLogDto>()
-                 .ForMember(dest => dest.TeamId, opt => opt.MapFrom(src => src.TeamId)); // Mapping nested objects
+                 .ForMember(dest => dest.TeamId, opt => opt.MapFrom(src => src.TeamId)); 
 
-            CreateMap<TeamDto, Team>(); // Ensure mapping is defined
+            CreateMap<TeamDto, Team>(); 
             CreateMap<Team, TeamDto>();
 
             CreateMap<UserTeamDto, UserIsInTeamRelation>()
@@ -53,12 +52,12 @@ namespace Cengaver.Services.Mappings
             CreateMap<UserTeamDto, UserIsInTeamRelation>().ReverseMap();
 
             CreateMap<GuardDutyNoteDto, GuardDutyNote>()
-            .ForMember(dest => dest.Id, opt => opt.Ignore()) // Adjust as needed
+            .ForMember(dest => dest.Id, opt => opt.Ignore()) 
             .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate))
             .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
             .ForMember(dest => dest.GuardDutyId, opt => opt.MapFrom(src => src.GuardDutyId))
             .ForMember(dest => dest.NoteTypeId, opt => opt.MapFrom(src => src.NoteTypeId))
-            .ForMember(dest => dest.IsDeleted, opt => opt.Ignore()); // or configure as needed
+            .ForMember(dest => dest.IsDeleted, opt => opt.Ignore()); 
 
             CreateMap<GuardDutyNote, GuardDutyNoteDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -66,9 +65,7 @@ namespace Cengaver.Services.Mappings
                 .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
                 .ForMember(dest => dest.GuardDutyId, opt => opt.MapFrom(src => src.GuardDutyId))
                 .ForMember(dest => dest.NoteTypeId, opt => opt.MapFrom(src => src.NoteTypeId))
-                .ForMember(dest => dest.IsDeleted, opt => opt.Ignore()); // or configure as needed
-
+                .ForMember(dest => dest.IsDeleted, opt => opt.Ignore()); 
         }
     }
-
 }

@@ -5,5 +5,4 @@
         public bool IsSuccess { get; set; }
         public IDictionary<string, string[]> ValidationErrors { get; set; }
     }
-
 }

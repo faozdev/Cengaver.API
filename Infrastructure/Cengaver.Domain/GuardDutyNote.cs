@@ -8,7 +8,6 @@
         public DateTime CreatedDate { get; set; }
         public string Content { get; set; }
         public bool IsDeleted { get; set; }
-
         public GuardDuty GuardDuty { get; set; }
         public GuardDutyNoteType NoteType { get; set; }
     }

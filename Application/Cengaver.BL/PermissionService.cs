@@ -16,7 +16,7 @@ namespace Cengaver.BL
     public class PermissionService : IPermissionService
     {
         private readonly DataContext _context;
-        private readonly IMapper _mapper; // Assuming you use AutoMapper for DTO mapping
+        private readonly IMapper _mapper; 
 
         public PermissionService(DataContext context, IMapper mapper)
         {
@@ -59,7 +59,7 @@ namespace Cengaver.BL
                 .FirstOrDefaultAsync(p => p.Id == id);
             if (existingPermission == null)
             {
-                return null; // Or throw a custom exception
+                return null;
             }
 
             _mapper.Map(permissionDto, existingPermission);
@@ -74,7 +74,7 @@ namespace Cengaver.BL
                 .FirstOrDefaultAsync(p => p.Id == id);
             if (existingPermission == null)
             {
-                return false; // Or throw a custom exception
+                return false;
             }
 
             _context.Permissions.Remove(existingPermission);

@@ -97,7 +97,7 @@ namespace Cengaver.BL
             var userCommunications = await _userCommunicationRepository.GetByUserIdAsync(userId);
             if (userCommunications == null)
             {
-                return null; // Or throw an exception based on your error handling strategy
+                return null; 
             }
 
             return userCommunications.Select(uc => new UserCommunicationDto

@@ -8,19 +8,8 @@ namespace Cengaver.Dto
 {
     public class PermissionDto
     {
-        /// <summary>
-        /// Gets or sets the ID of the permission.
-        /// </summary>
         public int Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ID of the role associated with the permission.
-        /// </summary>
         public int RoleId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the permission string.
-        /// </summary>
         public string UserPermission { get; set; }
     }
 

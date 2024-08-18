@@ -54,7 +54,7 @@ namespace Cengaver.BL
             };
 
             await _roleRepository.AddAsync(role);
-            await _dbContext.SaveChangesAsync(); // Use DbContext to save changes
+            await _dbContext.SaveChangesAsync(); 
 
             return new RoleDto
             {
@@ -71,9 +71,8 @@ namespace Cengaver.BL
 
             role.RoleName = roleUpdateDto.RoleName;
 
-            // Assuming you have a method to update the entity in the repository
             await _roleRepository.UpdateAsync(role);
-            await _dbContext.SaveChangesAsync(); // Use DbContext to save changes
+            await _dbContext.SaveChangesAsync(); 
 
             return new RoleDto
             {
@@ -89,7 +88,7 @@ namespace Cengaver.BL
                 return false;
 
             await _roleRepository.UpdateAsync(role);
-            await _dbContext.SaveChangesAsync(); // Use DbContext to save changes
+            await _dbContext.SaveChangesAsync();
 
             return true;
         }

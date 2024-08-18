@@ -40,7 +40,6 @@ namespace Cengaver.BL
 
         public async Task DeleteAsync(int id)
         {
-            // Ensure you are passing an id here
             await _repository.DeleteAsync(id);
         }
     }

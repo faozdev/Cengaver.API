@@ -42,7 +42,7 @@ namespace Cengaver.Persistence
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure User entity
+            // User 
             modelBuilder.Entity<User>()
                 .Property(u => u.SicilNo)
                 .IsRequired(false);
@@ -59,7 +59,7 @@ namespace Cengaver.Persistence
                 .Property(u => u.Name)
                 .IsRequired(false);
 
-            // Configure User relationships
+            // User relationships
             modelBuilder.Entity<User>()
                 .HasMany(u => u.UserRoles)
                 .WithOne(ur => ur.User)
@@ -98,7 +98,7 @@ namespace Cengaver.Persistence
                 .WithOne(gdn => gdn.GuardDuty)
                 .HasForeignKey(gdn => gdn.GuardDutyId);
 
-            // Configure GuardDutyNote entity
+            // GuardDutyNote
             modelBuilder.Entity<GuardDutyNote>()
                 .HasKey(gdn => gdn.Id);
 
@@ -112,7 +112,7 @@ namespace Cengaver.Persistence
                 .WithMany(gdnt => gdnt.GuardDutyNotes)
                 .HasForeignKey(gdn => gdn.NoteTypeId);
 
-            // Configure GuardDutyNoteType entity
+            // GuardDutyNoteType 
             modelBuilder.Entity<GuardDutyNoteType>()
                 .HasKey(gdnt => gdnt.NoteTypeId);
 
@@ -121,7 +121,7 @@ namespace Cengaver.Persistence
                 .WithOne(gdn => gdn.NoteType)
                 .HasForeignKey(gdn => gdn.NoteTypeId);
 
-            // Configure GuardDutyBreak entity
+            // GuardDutyBreak
             modelBuilder.Entity<GuardDutyBreak>()
                 .HasKey(gdb => gdb.Id);
 
@@ -135,7 +135,7 @@ namespace Cengaver.Persistence
                 .WithMany(gdbt => gdbt.GuardDutyBreaks)
                 .HasForeignKey(gdb => gdb.TypeId);
 
-            // Configure GuardDutyBreakType entity
+            // GuardDutyBreakType
             modelBuilder.Entity<GuardDutyBreakType>()
                 .HasKey(gdbt => gdbt.TypeId);
 
@@ -144,8 +144,7 @@ namespace Cengaver.Persistence
                 .WithOne(gdb => gdb.GuardDutyBreakType)
                 .HasForeignKey(gdb => gdb.TypeId);
 
-            // Configure UserRole entity
-
+            // UserRole 
             modelBuilder.Entity<UserRole>()
                 .HasKey(ur => new { ur.UserId, ur.RoleId });
 
@@ -160,7 +159,7 @@ namespace Cengaver.Persistence
                 .HasForeignKey(ur => ur.RoleId);
 
 
-            // Configure Role entity
+            // Role
             modelBuilder.Entity<Role>()
                 .HasKey(r => r.Id);
 
@@ -174,7 +173,7 @@ namespace Cengaver.Persistence
                 .WithOne(ur => ur.Role)
                 .HasForeignKey(ur => ur.RoleId);
 
-            // Configure Permission entity
+            // Permission
             modelBuilder.Entity<Permission>()
                 .HasKey(p => p.Id);
 
@@ -183,7 +182,7 @@ namespace Cengaver.Persistence
                 .WithMany(r => r.Permissions)
                 .HasForeignKey(p => p.RoleId);
 
-            // Configure UserTransactionLog entity
+            // UserTransactionLog
             modelBuilder.Entity<UserTransactionLog>()
                 .HasKey(utl => utl.Id);
 
@@ -192,7 +191,7 @@ namespace Cengaver.Persistence
                 .WithMany(u => u.UserTransactionLogs)
                 .HasForeignKey(utl => utl.UserId);
 
-            // Configure UserCommunication entity
+            // UserCommunication
             modelBuilder.Entity<UserCommunication>()
                 .HasKey(uc => new { uc.UserId, uc.CommunicationTypeId });
 
@@ -207,7 +206,7 @@ namespace Cengaver.Persistence
                 .WithMany(ct => ct.UserCommunications)
                 .HasForeignKey(uc => uc.CommunicationTypeId);
 
-            // Configure CommunicationType entity
+            // CommunicationType
             modelBuilder.Entity<CommunicationType>()
                 .HasKey(ct => ct.Id);
 
@@ -216,7 +215,7 @@ namespace Cengaver.Persistence
                 .WithOne(uc => uc.CommunicationType)
                 .HasForeignKey(uc => uc.CommunicationTypeId);
 
-            // Configure UserIsInTeamRelation entity
+            // UserIsInTeamRelation
             modelBuilder.Entity<UserIsInTeamRelation>()
                 .HasKey(ut => new { ut.UserId, ut.TeamId });
 
@@ -230,7 +229,7 @@ namespace Cengaver.Persistence
                 .WithMany(t => t.UserIsInTeamRelations)
                 .HasForeignKey(ut => ut.TeamId);
 
-            // Configure Team entity
+            // Team
             modelBuilder.Entity<Team>()
                 .Property(t => t.Id)
                 .ValueGeneratedOnAdd();
@@ -248,7 +247,7 @@ namespace Cengaver.Persistence
                 .WithOne(uitr => uitr.Team)
                 .HasForeignKey(uitr => uitr.TeamId);
 
-            // Configure TeamTransactionLog entity
+            // TeamTransactionLog
             modelBuilder.Entity<TeamTransactionLog>()
                 .HasKey(ttl => ttl.Id);
 
@@ -258,6 +257,5 @@ namespace Cengaver.Persistence
                 .HasForeignKey(ttl => ttl.TeamId);
         }
     }
-
 }
 

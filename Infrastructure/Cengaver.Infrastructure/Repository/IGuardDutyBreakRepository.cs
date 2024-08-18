@@ -20,6 +20,4 @@ namespace Cengaver.Infrastructure.Repository
         Task<GuardDutyBreak> UpdateAsync(GuardDutyBreak guardDutyBreak);
         Task DeleteAsync(int id);
     }
-
-
 }

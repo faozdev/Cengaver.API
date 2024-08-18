@@ -15,5 +15,4 @@ namespace Cengaver.BL.Abstractions
         Task<TeamDto> UpdateTeamAsync(int id, TeamDto teamDto);
         Task<bool> DeleteTeamAsync(int id);
     }
-    
 }

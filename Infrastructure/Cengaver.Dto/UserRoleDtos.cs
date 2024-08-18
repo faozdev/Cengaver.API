@@ -10,8 +10,8 @@ namespace Cengaver.Dto
     {
         public string UserId { get; set; }
         public int RoleId { get; set; }
-        public UserDto User { get; set; } // Assuming UserDto is defined
-        public RoleDto Role { get; set; } // Assuming RoleDto is defined
+        public UserDto User { get; set; } 
+        public RoleDto Role { get; set; } 
     }
 
     public class UserRoleCreateDto
@@ -22,8 +22,8 @@ namespace Cengaver.Dto
 
     public class UserRoleUpdateDto
     {
-        public string UserId { get; set; } // Add UserId property
-        public int RoleId { get; set; }     // Ensure RoleId is also included if needed
+        public string UserId { get; set; } 
+        public int RoleId { get; set; } 
     }
 
 }

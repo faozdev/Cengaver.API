@@ -9,7 +9,6 @@
         public DateTime EndDate { get; set; }
         public int TypeId { get; set; }
         public DateTime DateOfClaim { get; set; }
-
         public User User { get; set; }
         public GuardDutyBreakType GuardDutyBreakType { get; set; }
     }

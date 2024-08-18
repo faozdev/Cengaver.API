@@ -79,10 +79,6 @@ namespace Cengaver.BL
             if (relation == null)
                 return null;
 
-            // Güncellemeleri uygula
-            // Örneğin, eğer güncelleme yapılacak alanlar varsa:
-            // relation.SomeField = updateDto.SomeField;
-
             await _context.SaveChangesAsync();
 
             return new UserIsInTeamRelationDto

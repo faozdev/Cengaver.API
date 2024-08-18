@@ -73,23 +73,6 @@ namespace Cengaver.WebAPI.Controllers
 
             return Ok(serviceResult);
         }
-        /*
-        /// <summary>
-        /// Adds a new guard duty.
-        /// </summary>
-        /// <param name="guardDutyDto">The guard duty details to add.</param>
-        /// <returns>Result of the add operation.</returns>
-        [SwaggerResponse(201, type: typeof(SuccessResponse<GuardDutyDto>), description: SwaggerConstants.SuccessMessage)]
-        [SwaggerResponse(400, type: typeof(ErrorResponse), description: SwaggerConstants.NotSuccessMessage)]
-        [SwaggerResponse(422, type: typeof(ValidationErrorResponse), description: SwaggerConstants.NotSuccessValidationError)]
-        [SwaggerResponse(500, type: typeof(ExceptionResponse), description: SwaggerConstants.ExceptionMessage)]
-        [HttpPost("add-guard-duty")]
-        public async Task<IActionResult> AddGuardDuty([FromBody] GuardDutyDto guardDutyDto)
-        {
-            var serviceResult = await _guardDutyService.AddGuardDutyAsync(guardDutyDto).ConfigureAwait(false);
-            return CreatedAtAction(nameof(GetGuardDutyById), new { id = serviceResult.Id }, serviceResult);
-        }
-        */
         /// <summary>
         /// Updates an existing guard duty.
         /// </summary>
@@ -143,8 +126,5 @@ namespace Cengaver.WebAPI.Controllers
             var serviceResult = await _guardDutyService.AddGuardDutyAsync(guardDutyDto).ConfigureAwait(false);
             return CreatedAtAction(nameof(GetGuardDutyById), new { id = serviceResult.Id }, serviceResult);
         }
-
     }
-
-
 }

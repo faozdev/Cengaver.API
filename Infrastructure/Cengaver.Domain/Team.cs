@@ -7,7 +7,6 @@
         public string TeamLogo { get; set; }
         public DateTime CreatedDate { get; set; }
         public bool IsDeleted { get; set; }
-
         public ICollection<TeamTransactionLog> TeamTransactionLogs { get; set; }
         public ICollection<UserIsInTeamRelation> UserIsInTeamRelations { get; set; }
     }

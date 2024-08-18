@@ -92,7 +92,6 @@ namespace Cengaver.BL
             _context.UserRoles.Add(userRole);
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
-            // Retrieve the newly added UserRole entity to include related entities
             var addedUserRole = await _context.UserRoles
                 .Include(ur => ur.User)
                 .Include(ur => ur.Role)
@@ -129,12 +128,8 @@ namespace Cengaver.BL
                 return null;
             }
 
-            // Update properties if necessary
-            // For example: existingUserRole.SomeProperty = userRoleUpdateDto.SomeProperty;
-
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
-            // Retrieve the updated UserRole entity to include related entities
             var updatedUserRole = await _context.UserRoles
                 .Include(ur => ur.User)
                 .Include(ur => ur.Role)
@@ -148,16 +143,12 @@ namespace Cengaver.BL
                 User = new UserDto
                 {
                     Id = updatedUserRole.User.Id,
-                    // Replace `Name` with the actual property name of the User entity
-                    Name = updatedUserRole.User.Name // Change this to match your User entity
-                                                             // Map other properties as needed
+                    Name = updatedUserRole.User.Name 
                 },
                 Role = new RoleDto
                 {
                     Id = updatedUserRole.Role.Id,
-                    // Replace `Name` with the actual property name of the Role entity
-                    RoleName = updatedUserRole.Role.RoleName // Change this to match your Role entity
-                                                             // Map other properties as needed
+                    RoleName = updatedUserRole.Role.RoleName 
                 }
             };
         }

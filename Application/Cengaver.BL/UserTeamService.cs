@@ -16,7 +16,7 @@ namespace Cengaver.BL
     public class UserTeamService : IUserTeamService
     {
         private readonly DataContext _context;
-        private readonly IMapper _mapper; // Assuming you're using AutoMapper for DTOs
+        private readonly IMapper _mapper; 
 
         public UserTeamService(DataContext context, IMapper mapper)
         {
@@ -50,7 +50,6 @@ namespace Cengaver.BL
                 throw new ArgumentException("Invalid user or team ID.");
             }
 
-            // Check if the relation already exists
             var existingRelation = await _context.UserIsInTeamRelations
                 .FirstOrDefaultAsync(ut => ut.UserId == userTeamDto.UserId && ut.TeamId == userTeamDto.TeamId);
 
@@ -59,22 +58,18 @@ namespace Cengaver.BL
                 throw new InvalidOperationException("User is already assigned to this team.");
             }
 
-            // Create and add the new relation
             var userTeamEntity = _mapper.Map<UserIsInTeamRelation>(userTeamDto);
             _context.UserIsInTeamRelations.Add(userTeamEntity);
 
-            // Save changes to the database
             try
             {
                 await _context.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (DbUpdateException ex) when (ex.InnerException is SqlException sqlEx && sqlEx.Number == 2627)
             {
-                // Handle the primary key violation
                 throw new InvalidOperationException("A primary key constraint was violated. Ensure that there are no duplicate entries.", ex);
             }
 
-            // Map and return the DTO
             return _mapper.Map<UserTeamDto>(userTeamEntity);
         }
 
@@ -86,10 +81,9 @@ namespace Cengaver.BL
                 .ConfigureAwait(false);
             if (existingEntity == null)
             {
-                return null; // or throw an exception if preferred
+                return null; 
             }
 
-            // Update properties here
             existingEntity.CreatedDate = userTeamDto.CreatedDate;
 
             _context.UserIsInTeamRelations.Update(existingEntity);

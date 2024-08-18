@@ -29,7 +29,6 @@ namespace Cengaver.BL
                 .Include(gd => gd.GuardDutyNotes)
                 .ToListAsync();
 
-            // Map to DTOs
             return guardDuties.Select(gd => new GuardDutyDto
             {
                 Id = gd.Id,
@@ -38,9 +37,6 @@ namespace Cengaver.BL
                 WardenUserId = gd.WardenUserId,
                 DateOfAssignment = gd.DateOfAssignment,
                 GuardAssignedByUser = gd.GuardAssignedByUser,
-                // Map related entities if needed
-                // Example: WardenUser = gd.WardenUser?.Name,
-                //          GuardDutyNotes = gd.GuardDutyNotes?.Select(note => note.Content).ToList()
             }).ToList();
         }
 
@@ -54,7 +50,6 @@ namespace Cengaver.BL
             if (guardDuty == null)
                 return null;
 
-            // Map to DTO
             return new GuardDutyDto
             {
                 Id = guardDuty.Id,
@@ -63,38 +58,8 @@ namespace Cengaver.BL
                 WardenUserId = guardDuty.WardenUserId,
                 DateOfAssignment = guardDuty.DateOfAssignment,
                 GuardAssignedByUser = guardDuty.GuardAssignedByUser,
-                // Map related entities if needed
-                // Example: WardenUser = guardDuty.WardenUser?.Name,
-                //          GuardDutyNotes = guardDuty.GuardDutyNotes?.Select(note => note.Content).ToList()
             };
         }
-        /*
-        public async Task<GuardDutyDto> AddGuardDutyAsync(GuardDutyDto guardDutyDto)
-        {
-            var guardDuty = new GuardDuty
-            {
-                StartDate = guardDutyDto.StartDate,
-                EndDate = guardDutyDto.EndDate,
-                WardenUserId = guardDutyDto.WardenUserId,
-                DateOfAssignment = guardDutyDto.DateOfAssignment,
-                GuardAssignedByUser = guardDutyDto.GuardAssignedByUser
-            };
-
-            _context.GuardDuties.Add(guardDuty);
-            await _context.SaveChangesAsync();
-
-            // Map to DTO
-            return new GuardDutyDto
-            {
-                Id = guardDuty.Id,
-                StartDate = guardDuty.StartDate,
-                EndDate = guardDuty.EndDate,
-                WardenUserId = guardDuty.WardenUserId,
-                DateOfAssignment = guardDuty.DateOfAssignment,
-                GuardAssignedByUser = guardDuty.GuardAssignedByUser
-            };
-        }
-        */
 
         public async Task<GuardDutyDto> UpdateGuardDutyAsync(int id, GuardDutyDto guardDutyDto)
         {
@@ -103,7 +68,6 @@ namespace Cengaver.BL
             if (guardDuty == null)
                 return null;
 
-            // Update properties
             guardDuty.StartDate = guardDutyDto.StartDate;
             guardDuty.EndDate = guardDutyDto.EndDate;
             guardDuty.WardenUserId = guardDutyDto.WardenUserId;
@@ -113,7 +77,6 @@ namespace Cengaver.BL
             _context.GuardDuties.Update(guardDuty);
             await _context.SaveChangesAsync();
 
-            // Map to DTO
             return new GuardDutyDto
             {
                 Id = guardDuty.Id,
@@ -146,7 +109,6 @@ namespace Cengaver.BL
                 .Include(gd => gd.GuardDutyNotes)
                 .ToListAsync();
 
-            // Map to DTOs
             return guardDuties.Select(gd => new GuardDutyDto
             {
                 Id = gd.Id,
@@ -155,15 +117,12 @@ namespace Cengaver.BL
                 WardenUserId = gd.WardenUserId,
                 DateOfAssignment = gd.DateOfAssignment,
                 GuardAssignedByUser = gd.GuardAssignedByUser,
-                // Map related entities if needed
-                // Example: WardenUser = gd.WardenUser?.Name,
-                //          GuardDutyNotes = gd.GuardDutyNotes?.Select(note => note.Content).ToList()
+
             }).ToList();
         }
 
         public async Task<GuardDutyDto> AddGuardDutyAsync(GuardDutyDto guardDutyDto)
         {
-            // Create a new GuardDuty entity from the provided DTO
             var guardDuty = new GuardDuty
             {
                 StartDate = guardDutyDto.StartDate,
@@ -173,13 +132,10 @@ namespace Cengaver.BL
                 GuardAssignedByUser = guardDutyDto.GuardAssignedByUser
             };
 
-            // Add the new entity to the context
             _context.GuardDuties.Add(guardDuty);
 
-            // Save changes to the database
             await _context.SaveChangesAsync();
 
-            // Map the created entity back to a DTO
             return new GuardDutyDto
             {
                 Id = guardDuty.Id,

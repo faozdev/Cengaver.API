@@ -12,12 +12,11 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<DataContex
     {
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("C:\\Users\\Fatih\\source\\projects\\Cengaver.API\\Presentation\\Cengaver.WebAPI\\appsettings.json")
+            .AddJsonFile("C:\\Users\\Fatih\\source\\projects\\Cengaver.API\\Presentation\\Cengaver.WebAPI\\appsettings.json") //it will be change
             .Build();
 
         var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
         optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-
         return new DataContext(optionsBuilder.Options);
     }
 }

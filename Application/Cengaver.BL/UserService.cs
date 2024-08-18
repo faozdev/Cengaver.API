@@ -140,7 +140,6 @@ namespace Cengaver.BL
 
         private string GenerateSecurePassword()
         {
-            // Implement a secure password generation strategy or use a library
             return "DefaultPassword123!";
         }
 

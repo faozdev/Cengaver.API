@@ -13,9 +13,6 @@ namespace Cengaver.Dto
         public string Name { get; set; } 
         public string SicilNo { get; set; }
         public DateTime UserRegistrationDate { get; set; }
-
-
-
     }
 
     public class UserCreateDto

@@ -142,19 +142,12 @@ namespace Cengaver.WebAPI.Controllers
             var teamIds = await _userIsInTeamRelationService.GetTeamIdsByUserIdAsync(userId).ConfigureAwait(false);
             if (teamIds == null || !teamIds.Any())
                 return NotFound();
-
-            // `SuccessResponse` sınıfına uygun olarak veri ile başarı yanıtı döndür
             var response = new SuccessResponse<List<int>>(teamIds)
             {
                 IsSuccess = true,
                 ErrorMessage = null
             };
-
             return Ok(response);
         }
-
-
     }
-
-
 }

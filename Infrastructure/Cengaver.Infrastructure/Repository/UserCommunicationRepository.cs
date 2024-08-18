@@ -49,7 +49,7 @@ namespace Cengaver.Infrastructure.Repository
 
             if (existingUserCommunication == null)
             {
-                return null; // Or throw an exception if you prefer
+                return null;
             }
 
             existingUserCommunication.CommunicationString = userCommunication.CommunicationString;
@@ -78,5 +78,4 @@ namespace Cengaver.Infrastructure.Repository
                 .ToListAsync();
         }
     }
-
 }

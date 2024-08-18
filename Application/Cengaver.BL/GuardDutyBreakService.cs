@@ -56,7 +56,7 @@ namespace Cengaver.BL
             var existingBreak = await _guardDutyBreakRepository.GetByIdAsync(id).ConfigureAwait(false);
             if (existingBreak == null)
             {
-                return null; // Not found
+                return null; 
             }
 
             _mapper.Map(guardDutyBreakDto, existingBreak);
@@ -69,7 +69,7 @@ namespace Cengaver.BL
             var existingBreak = await _guardDutyBreakRepository.GetByIdAsync(id).ConfigureAwait(false);
             if (existingBreak == null)
             {
-                return false; // Not found
+                return false;
             }
 
             await _guardDutyBreakRepository.DeleteAsync(id).ConfigureAwait(false);

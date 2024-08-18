@@ -31,8 +31,8 @@ namespace Cengaver.Infrastructure.Repository
         public async Task<GuardDutyBreak> GetByIdAsync(int id)
         {
             return await _context.GuardDutyBreaks
-                                 .Include(g => g.User) // Assuming you want to include related entities
-                                 .Include(g => g.GuardDutyBreakType) // Assuming you want to include related entities
+                                 .Include(g => g.User) 
+                                 .Include(g => g.GuardDutyBreakType) 
                                  .FirstOrDefaultAsync(g => g.Id == id)
                                  .ConfigureAwait(false);
         }

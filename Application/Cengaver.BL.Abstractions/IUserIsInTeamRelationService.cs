@@ -15,9 +15,6 @@ namespace Cengaver.BL.Abstractions
         Task<UserIsInTeamRelationDto> UpdateUserTeamRelationAsync(string userId, int teamId, UserIsInTeamRelationUpdateDto updateDto);
         Task<bool> DeleteUserTeamRelationAsync(string userId, int teamId);
         Task<List<int>> GetTeamIdsByUserIdAsync(string userId);
-        Task<List<UserIsInTeamRelationDto>> GetUserTeamRelationsByUserIdAsync(string userId); // Bu satırı ekleyin
+        Task<List<UserIsInTeamRelationDto>> GetUserTeamRelationsByUserIdAsync(string userId); 
     }
-
-
-
 }

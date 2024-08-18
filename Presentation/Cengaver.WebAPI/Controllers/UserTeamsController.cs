@@ -13,7 +13,6 @@ namespace Cengaver.WebAPI.Controllers
     public class UserTeamsController : ControllerBase
     {
         private readonly IUserTeamService _userTeamService;
-
         public UserTeamsController(IUserTeamService userTeamService)
         {
             _userTeamService = userTeamService;
@@ -125,7 +124,5 @@ namespace Cengaver.WebAPI.Controllers
                 return NotFound();
             return Ok(serviceResult);
         }
-
     }
-
 }

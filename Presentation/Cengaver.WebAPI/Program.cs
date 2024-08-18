@@ -16,16 +16,10 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 builder.Services.AddControllers();
 builder.Services.AddAuthorization();
-//builder.Services.AddAuthentication().AddCookie();
-
-//builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme)
-//    .AddBearerToken(IdentityConstants.BearerScheme);
-
 
 builder.Services.AddAuthentication(options =>
 {
@@ -39,19 +33,8 @@ builder.Services.AddIdentityCore<User>()
     .AddEntityFrameworkStores<DataContext>()
     .AddApiEndpoints();
 
-
-/*
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-*/
-
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-/*
-builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<DataContext>()
-    .AddDefaultTokenProviders();
-*/
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserTransactionLogService, UserTransactionLogService>();
